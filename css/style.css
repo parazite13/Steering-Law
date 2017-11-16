@@ -1,0 +1,28 @@
+th:first-child{ 
+	border-right-color: black; 
+}
+
+thead tr:first-child th{
+	border-bottom-color: black; 
+}
+
+.jumbotron{
+	margin-bottom: 0;
+	padding-top: 2rem;
+	padding-bottom: 2rem; 
+}
+
+#couples tr{
+	height: 3rem;
+}
+
+#couples td, #couples th{
+	width: 100px;
+	text-align: center;
+}
+
+.popover{
+	width: 800px;
+	height: 550px;
+	max-width: none;
+}
