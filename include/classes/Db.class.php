@@ -1,6 +1,6 @@
 <?php 
 
-class Bd{
+class Db{
 
 	private $bd;
 

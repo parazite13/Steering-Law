@@ -10,19 +10,22 @@
 		exit;
 	}
 
-	if(!isset($_SESSION['type'])) $_SESSION['type'] = 'Utilisateur';
+	if(!isset($_SESSION['connect'])) $_SESSION['connect'] = false;
 
 	//la personne essaie de se connecter
 	if(isset($_POST['mdp'])){
 		if($_POST['mdp'] == MDP_ADMIN){
-			$_SESSION['type'] = 'Admin';
-		}
-		else{
+			$_SESSION['connect'] = true;
+			if(isset($_POST['request_url'])){
+				header('Location: ' . $_POST['request_url']);
+				exit;
+			}
+		}else{
 			$_SESSION['alertMdp'] = true;
 		}
 
 		// Corrige le bug de retransmission du formulaire
-		header("Location: " . ABSURL . "admin");
+		header("Location: " . ABSURL);
 		exit;
 	}
 ?>
