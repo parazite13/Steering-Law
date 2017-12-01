@@ -8,19 +8,6 @@ var backPixels = [];	//pixels qui suit la souris
 var experienceCenter = new pixel(canvas[0].width/2, 400);
 var arc1 = new arc(experienceCenter, 300, 0, Math.PI);
 var arcStart = new arc(arc1.center, arc1.radius, arc1.end, arc1.end - Math.PI/10, '#00ff00');
-canvas.mousemove(function(event){
-	var x = event.clientX;
-	var y = event.clientY;
-
-	var rect = canvas[0].getBoundingClientRect();
-	x -= rect.left;
-	y -= rect.top;
-
-	var mouseX = x;
-	var mouseY = y;
-
-	setPixels(mouseX, mouseY);
-});
 
 canvas.click(function(event){
 	var x = event.clientX;
@@ -32,12 +19,27 @@ canvas.click(function(event){
 
 	var pixelCurrent = ctx.getImageData(x, y, 1, 1);
 	var data = pixelCurrent.data;
+
 	//si on clique sur la zone verte
 	if(data[1] == 255){
+		//retire arc de départ
 		arcStart = undefined;
 		//chrono
 		var chrono = new timer();	
 		chrono.run();
+		//dessine les pixels arrières
+		canvas.mousemove(function(event){
+			var x = event.clientX;
+			var y = event.clientY;
+
+			var rect = canvas[0].getBoundingClientRect();
+			x -= rect.left;
+			y -= rect.top;
+
+			var mouseX = x;
+			var mouseY = y;
+			setPixels(mouseX, mouseY);
+		});
 	}
 });
 
