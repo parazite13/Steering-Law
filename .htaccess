@@ -3,6 +3,7 @@
 RewriteEngine On
 RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !^/favicon\.ico [NC]
 RewriteCond $0#%{REQUEST_URI} ([^#]*)#(.*)\1$
 RewriteRule ^.*$ %2index.php [QSA,L]
 </IfModule>

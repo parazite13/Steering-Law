@@ -16,10 +16,8 @@
 	if(isset($_POST['mdp'])){
 		if($_POST['mdp'] == MDP_ADMIN){
 			$_SESSION['connect'] = true;
-			if(isset($_POST['request_url'])){
-				header('Location: ' . $_POST['request_url']);
-				exit;
-			}
+			header("Location: " . ABSURL . "admin/");
+			exit;
 		}else{
 			$_SESSION['alertMdp'] = true;
 		}
