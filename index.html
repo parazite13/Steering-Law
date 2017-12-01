@@ -18,12 +18,12 @@
 		<div class="container-fluid">
 			<div id="headExperience">
 				<p>
-					Quand vous êtes prêt, cliquez sur les deux cibles en alternant de gauche à droite, le plus vite et le plus précisément possible (essayez de minimiser les erreurs), en commençant par la cible bleue.<br>
-					Le chronomètre démarre dès le premier clique…
+					Quand vous êtes prêt, cliquez sur la zone verte pour lancer l'expérience puis effectuez le chemin tracé le plus rapidement et le plus précisément possible.<br>
+					Le chronomètre démarre dès le clique sur la zone verte effectué.
 				</p>
-				<button class="btn btn-primary mb-2" id="startExperience" role="button" onclick="start()">Démarrer l'expérience</button>
+				<button class="btn btn-primary mb-2" id="startExperience" role="button" onclick="start()">Afficher</button>
 			</div>
-			<input class="form-control mx-auto" type="text" id="chronotime" value="" style="text-align: center; width: initial; visibility: hidden;"/>
+			<input class="form-control mx-auto" type="text" id="chronotime" value="00 : 00 : 000" style="text-align: center; width: initial; visibility: hidden;"/>
 			<canvas id="canvas" style="width: 100%; height:90vh; cursor: crosshair; background: #CED2D2;">
 				Je suis un Canvas et je me porte mal.
 			</canvas>
@@ -40,10 +40,9 @@
 	//variables de jeu
 	var backPixels = [];	//pixels qui suit la souris
 	var experienceCenter = new pixel(canvas[0].width/2, 400);
-	var arc = new arc(experienceCenter, 300);
-
+	var arc1 = new arc(experienceCenter, 300, 0, Math.PI);
+	var arcStart = new arc(arc1.center, arc1.radius, arc1.end, arc1.end - Math.PI/10, '#00ff00');
 	canvas.mousemove(function(event){
-		ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
 		var x = event.clientX;
 		var y = event.clientY;
 
@@ -54,9 +53,26 @@
 		var mouseX = x;
 		var mouseY = y;
 
-		arc.draw();
 		setPixels(mouseX, mouseY);
-		drawBackPixels();
+	});
+
+	canvas.click(function(event){
+		var x = event.clientX;
+		var y = event.clientY;
+
+		var rect = canvas[0].getBoundingClientRect();
+		x -= rect.left;
+		y -= rect.top;
+
+		var pixelCurrent = ctx.getImageData(x, y, 1, 1);
+		var data = pixelCurrent.data;
+		//si on clique sur la zone verte
+		if(data[1] == 255){
+			arcStart = undefined;
+			//chrono
+			var chrono = new timer();	
+			chrono.run();
+		}
 	});
 
 	function setPixels(x, y){
@@ -108,15 +124,17 @@
 		}
 	}
 
-	function arc(pixel, length){
+	function arc(pixel, radius, start, end, color='#0000ff'){
 		this.center = pixel;
-		this.radius = length;
-		this.color = "#0000ff";
+		this.radius = radius;
+		this.start = start;
+		this.end = end;		
+		this.color = color;
 		this.draw = function(){
 			ctx.strokeStyle = this.color;
 			ctx.beginPath();
 			ctx.lineWidth = 80;
-			ctx.arc(this.center.x, this.center.y, this.radius, 0, Math.PI, true);
+			ctx.arc(this.center.x, this.center.y, this.radius, this.start, this.end, true);
 			ctx.stroke();
 		}
 	}
@@ -134,8 +152,21 @@
 
 	function start(){
 		$('#chronotime').css('visibility', 'visible');
-		var chrono = new timer();	
-		chrono.run();
+		backPixels = [];
+		draw();
+	}
+
+	function draw(){
+		ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
+
+		//dessins
+		arc1.draw();
+		if(arcStart !== undefined){
+			arcStart.draw();
+		}
+		drawBackPixels();
+
+		window.requestAnimationFrame(draw); //on appelle run en boucle
 	}
 
 	function timer(){
