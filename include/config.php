@@ -4,7 +4,7 @@ define('MDP_ADMIN', 'azertyuiop');
 
 // Url absolue vers la racine de l'application
 // Avec le "/" terminal
-define('ABSURL', 'http://divers/baseApplication/');
+define('ABSURL', 'http://steering/');
 
 // Utilisateur de la base de données MySQL
 define('DB_USER', 'root');
