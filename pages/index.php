@@ -10,7 +10,9 @@
 	
 	<?php getHeader(); ?>
 	
-	
+	<audio id="buzzer" src="audio/buzzer.mp3" type="audio/mp3"></audio>
+	<audio id="success" src="audio/success.mp3" type="audio/mp3"></audio>
+
 	<div class="jumbotron text-center py-2" id="experience">
 		<div class="container-fluid">
 			<div id="headExperience">
