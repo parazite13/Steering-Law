@@ -23,9 +23,10 @@
 				<button class="btn btn-primary mb-2" id="startExperience" role="button" onclick="start()">Afficher</button>
 			</div>
 			<input class="form-control mx-auto" type="text" id="chronotime" value="00 : 00 : 000" style="text-align: center; width: initial; visibility: hidden;"/>
-			<canvas id="canvas" style="width: 100%; height:90vh; cursor: crosshair; background: #CED2D2;">
+			<canvas id="canvas" style="width: 100%; height:90vh; cursor: crosshair; background: #FFFFFF;">
 				Je suis un Canvas et je me porte mal.
 			</canvas>
+			<input class="form-control mx-auto" type="text" id="coordMouse" value="" style="text-align: center; width: initial;"/>
 		</div>
 	</div>
 
