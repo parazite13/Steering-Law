@@ -5,65 +5,65 @@ canvas[0].height = $("#canvas").height();
 var ctx = canvas[0].getContext('2d');
 //variables de jeu
 var backPixels = [];	//pixels qui suit la souris
-var experienceCenter = new pixel(canvas[0].width/3, 200);
-
 var mouseX;
 var mouseY;
 var laGlobaleJadore = true;
 var wayStarted = false;
 var perfectGame = true;
 
-var path = new Path(experienceCenter, 100, 0, Math.PI);
+var path = new Path();
 path.add(new Arc(100, Math.PI/3));
 path.add(new Arc(200, Math.PI/2));
 path.add(new Arc(300, Math.PI/2));
 path.add(new Arc(300, Math.PI));
 
-canvas.click(function(event){
-	var x = event.clientX;
-	var y = event.clientY;
+function eventListeners(){
+	canvas.click(function(event){
+		var x = event.clientX;
+		var y = event.clientY;
 
-	var rect = canvas[0].getBoundingClientRect();
-	x -= rect.left;
-	y -= rect.top;
+		var rect = canvas[0].getBoundingClientRect();
+		x -= rect.left;
+		y -= rect.top;
 
-	var pixelCurrent = ctx.getImageData(x, y, 1, 1);
-	var data = pixelCurrent.data;
-	var codePixelCurrent = '#' + data[0].toString(16).lpad(0, 2) + data[1].toString(16).lpad(0, 2) + data[2].toString(16).lpad(0, 2);
-	//si on clique sur la zone verte
-	if(codePixelCurrent == '#00ff00'){
-		laGlobaleJadore = false;
-		wayStarted = true;
-		var chrono = new Timer();	
-		chrono.run();
-		canvas.mousemove(function(event){
-			var x = event.clientX;
-			var y = event.clientY;
+		var pixelCurrent = ctx.getImageData(x, y, 1, 1);
+		var data = pixelCurrent.data;
+		var codePixelCurrent = '#' + data[0].toString(16).lpad(0, 2) + data[1].toString(16).lpad(0, 2) + data[2].toString(16).lpad(0, 2);
+		//si on clique sur la zone verte
+		if(codePixelCurrent == '#00ff00'){
+			laGlobaleJadore = false;
+			wayStarted = true;
+			var chrono = new Timer();	
+			chrono.run();
+			canvas.mousemove(function(event){
+				var x = event.clientX;
+				var y = event.clientY;
 
-			var rect = canvas[0].getBoundingClientRect();
-			x -= rect.left;
-			y -= rect.top;
+				var rect = canvas[0].getBoundingClientRect();
+				x -= rect.left;
+				y -= rect.top;
 
-			mouseX = x;
-			mouseY = y;
+				mouseX = x;
+				mouseY = y;
 
-			var pixel = ctx.getImageData(mouseX, mouseY, 1, 1);
-			var dat = pixel.data;
-			var codePixel = '#' + dat[0].toString(16).lpad(0, 2) + dat[1].toString(16).lpad(0, 2) + dat[2].toString(16).lpad(0, 2);
-			if(codePixel == '#ff0000'){
-				wayStarted = false;
-				backPixels = [];
-				if(perfectGame){
-					$('#success')[0].play();
-					chrono.pause();
-				}else{
-					chrono.reset();
+				var pixel = ctx.getImageData(mouseX, mouseY, 1, 1);
+				var dat = pixel.data;
+				var codePixel = '#' + dat[0].toString(16).lpad(0, 2) + dat[1].toString(16).lpad(0, 2) + dat[2].toString(16).lpad(0, 2);
+				if(codePixel == '#ff0000'){
+					wayStarted = false;
+					backPixels = [];
+					if(perfectGame){
+						$('#success')[0].play();
+						chrono.pause();
+					}else{
+						chrono.reset();
+					}
 				}
-			}
-			//$('#coordMouse').val("x : " + mouseX + "; " + " y : " + mouseY);
-		});
-	}
-});
+				//$('#coordMouse').val("x : " + mouseX + "; " + " y : " + mouseY);
+			});
+		}
+	});
+}
 
 function setPixels(x, y){
 
@@ -78,7 +78,7 @@ function setPixels(x, y){
 	});
 	//on rajoute le pixel s'il n'existe pas deja
 	if(!isPresent){
-		var newPix = new pixel(x, y);
+		var newPix = new Pixel(x, y);
 		backPixels.push(newPix);
 		//dit si le pixel est dans le chemin ou non (change sa couleur en fonction)
 		var pixelCurrent = ctx.getImageData(x, y, 1, 1);
@@ -118,7 +118,7 @@ String.prototype.lpad = function(padString, length) {
 	return str;
 }
 
-function pixel(x, y){
+function Pixel(x, y){
 	this.x = x;
 	this.y = y;
 	this.size = 1;
@@ -173,6 +173,7 @@ function drawBack(){
 }
 
 function start(){
+	eventListeners();
 	$('#chronotime').css('visibility', 'visible');
 	backPixels = [];
 	draw();
