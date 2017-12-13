@@ -20,8 +20,8 @@
 					Quand vous êtes prêt, cliquez sur la zone verte pour lancer l'expérience puis effectuez le chemin tracé le plus rapidement et le plus précisément possible.<br>
 					Le chronomètre démarre dès le clique sur la zone verte effectué.
 				</p>
-				<button class="btn btn-primary mb-2" id="trainExperience" role="button" onclick="startTrain()">S'entrainer</button>
-				<button class="btn btn-primary mb-2" id="startExperience" role="button" onclick="start()">Démarrer</button>
+				<button class="btn btn-primary mb-2" id="trainExperience" role="button" onclick="isTraining = true; start()">S'entrainer</button>
+				<button class="btn btn-primary mb-2" id="startExperience" role="button" onclick="isTraining = false; start()">Démarrer</button>
 			</div>
 			<input class="form-control mx-auto" type="text" id="chronotime" value="00 : 00 : 000" style="text-align: center; width: initial; visibility: hidden;"/>
 			<canvas id="canvas" style="width: 100%; height:90vh; cursor: crosshair; background: #FFFFFF;">
@@ -37,6 +37,5 @@
 </body>
 
 <script type="text/javascript" src="js/script.js"></script>
-<script type="text/javascript" src="js/train.js"></script>
 
 </html>

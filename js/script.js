@@ -8,17 +8,15 @@ var backPixels = [];	//pixels qui suit la souris
 var mouseX;
 var mouseY;
 var laGlobaleJadore = true;
+var arrayStart = [];
 var wayStarted = false;
 var perfectGame = true;
-
-var path = new Path();
-path.add(new Arc(100, Math.PI/3));
-path.add(new Arc(200, Math.PI/2));
-path.add(new Arc(300, Math.PI/2));
-path.add(new Arc(300, Math.PI));
+var chrono;
+var isTraining;
+var path;
 
 function eventListeners(){
-	canvas.click(function(event){
+	canvas.mousemove(function(event){
 		var x = event.clientX;
 		var y = event.clientY;
 
@@ -26,48 +24,42 @@ function eventListeners(){
 		x -= rect.left;
 		y -= rect.top;
 
-		var pixelCurrent = ctx.getImageData(x, y, 1, 1);
-		var data = pixelCurrent.data;
-		var codePixelCurrent = '#' + data[0].toString(16).lpad(0, 2) + data[1].toString(16).lpad(0, 2) + data[2].toString(16).lpad(0, 2);
-		//si on clique sur la zone verte
-		if(codePixelCurrent == '#00ff00'){
-			laGlobaleJadore = false;
-			wayStarted = true;
-			var chrono = new Timer();	
-			chrono.run();
-			canvas.mousemove(function(event){
-				var x = event.clientX;
-				var y = event.clientY;
+		mouseX = x;
+		mouseY = y;
 
-				var rect = canvas[0].getBoundingClientRect();
-				x -= rect.left;
-				y -= rect.top;
-
-				mouseX = x;
-				mouseY = y;
-
-				var pixel = ctx.getImageData(mouseX, mouseY, 1, 1);
-				var dat = pixel.data;
-				var codePixel = '#' + dat[0].toString(16).lpad(0, 2) + dat[1].toString(16).lpad(0, 2) + dat[2].toString(16).lpad(0, 2);
-				if(codePixel == '#ff0000'){
-					wayStarted = false;
-					backPixels = [];
-					if(perfectGame){
-						$('#success')[0].play();
-						chrono.pause();
-					}else{
-						chrono.reset();
-					}
+		var pixel = ctx.getImageData(mouseX, mouseY, 1, 1);
+		var dat = pixel.data;
+		var codePixel = '#' + dat[0].toString(16).lpad(0, 2) + dat[1].toString(16).lpad(0, 2) + dat[2].toString(16).lpad(0, 2);
+		//le chemin commence : on passe du vert au gris 
+		if(!wayStarted){
+			arrayStart.push(codePixel);
+			if(arrayStart.length > 2){
+				arrayStart.shift();
+			}
+			//Ca part.
+			if(arrayStart[0] == '#00ff00' && arrayStart[1] == '#e8e8e8'){
+				laGlobaleJadore = false;
+				wayStarted = true;
+				chrono = new Timer();
+				chrono.run();
+			}
+		}else{
+			if(codePixel == '#ff0000'){
+				wayStarted = false;
+				backPixels = [];
+				if(perfectGame){
+					$('#success')[0].play();
+					chrono.pause();
+				}else{
+					chrono.reset();
 				}
-				//$('#coordMouse').val("x : " + mouseX + "; " + " y : " + mouseY);
-			});
+			}
 		}
+		//$('#coordMouse').val("x : " + mouseX + "; " + " y : " + mouseY);
 	});
 }
 
 function setPixels(x, y){
-
-	var maxLength = 15;
 	//dit si le pixel existe déjà dans le tableau ou non
 	var isPresent = false;
 	$(backPixels).each(function(index, value){
@@ -93,22 +85,10 @@ function setPixels(x, y){
 				$('#buzzer')[0].play();
 			}
 			newPix.color = '#ff0000';
-			path.setColor('#e8e8e8');
 		}else{
-			path.setColor('#000000');
 			laGlobaleJadore = true;
 		}
 	}
-	//on supprime le dernier pixel
-	if(backPixels.length > maxLength){
-		backPixels.splice(0, 1);
-	}
-}
-
-function distance(p1, p2){
-	return Math.sqrt(
-		(p2.x - p1.x)*(p2.x - p1.x) +
-		(p2.y - p1.y)*(p2.y - p1.y));
 }
 
 String.prototype.lpad = function(padString, length) {
@@ -130,8 +110,8 @@ function Pixel(x, y){
 		ctx.fill();
 	}
 }
-//function arc(radius, angle, color='#000000')
-function Arc(radius, angle, color='#000000'){
+
+function Arc(radius, angle, color='#e8e8e8'){
 	this.radius = radius;
 	this.angle = angle;
 	this.center = {x:0, y:0};
@@ -140,9 +120,15 @@ function Arc(radius, angle, color='#000000'){
 	this.isTrigonometrique;
 	this.color = color;
 	this.draw = function(){
-		ctx.strokeStyle = this.color;
+		ctx.strokeStyle = "#000000";
 		ctx.beginPath();
 		ctx.lineWidth = 80;
+		ctx.arc(this.center.x, this.center.y, this.radius, this.start, this.end, this.isTrigonometrique);
+		ctx.stroke();
+		
+		ctx.strokeStyle = this.color;
+		ctx.beginPath();
+		ctx.lineWidth = 76;
 		ctx.arc(this.center.x, this.center.y, this.radius, this.start, this.end, this.isTrigonometrique);
 		ctx.stroke();
 	}
@@ -174,10 +160,22 @@ function drawBack(){
 
 function start(){
 	eventListeners();
+	//canvas[0].webkitRequestFullscreen();
 	$('#chronotime').css('visibility', 'visible');
 	backPixels = [];
+
+	if(isTraining){
+		path = new PathTrain();
+	}else{
+		path = new Path();
+		path.add(new Arc(100, Math.PI/3));
+		path.add(new Arc(200, Math.PI/2));
+		path.add(new Arc(300, Math.PI/2));
+		path.add(new Arc(300, Math.PI));
+	}
 	draw();
 }
+
 
 function draw(){
 	ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
@@ -312,6 +310,38 @@ function Path(){
 			if(index != 0 && index != lastIndex){
 				arc.color = color;
 			}
+		});
+	}
+}
+
+function PathTrain(){
+	//crée l'arc vert de départ (constante pour tous les chemins)
+	var arcStart = new Arc(canvas[0].height / 2 - 40 - 10, undefined, '#00ff00');
+	arcStart.center = {x:canvas[0].width / 2, y:canvas[0].height / 2};
+	arcStart.start = Math.PI + Math.PI / 50;	
+	arcStart.end = arcStart.start - Math.PI / 50;
+	arcStart.isTrigonometrique = true;
+	this.arcs = [arcStart];
+
+	//crée l'arc vert de départ (constante pour tous les chemins)
+	var mainArc = new Arc(arcStart.radius, undefined, '#e8e8e8');
+	mainArc.center = arcStart.center;
+	mainArc.start = Math.PI - Math.PI / 25;
+	mainArc.end = arcStart.start;	
+	mainArc.isTrigonometrique = true;
+	this.arcs.push(mainArc);
+
+	// //initialise un arc de fin (qui changera à chaque ajout d'arc dans le chemin)
+	var arcEnd = new Arc(mainArc.radius, undefined, '#ff0000');
+	arcEnd.center = mainArc.center;
+	arcEnd.start = Math.PI - Math.PI / 50;
+	arcEnd.end = mainArc.start;
+	arcEnd.isTrigonometrique = true;
+	this.arcs.push(arcEnd);
+
+	this.draw = function(){
+		$.each(this.arcs, function(index, arc){
+			arc.draw();
 		});
 	}
 }
