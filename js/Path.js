@@ -17,7 +17,6 @@ function Path(){
 
 	this.angle;
 	this.draw = function(){
-		ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
 		$.each(this.arcs, function(index, arc){
 			arc.draw();
 		});

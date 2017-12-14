@@ -173,6 +173,7 @@ $(document).ready(function(){
 			var angle =  inputs[1].value;
 			var path = new Path();
 			path.add(new Arc(radius, angle, "#e8e8e8"));
+			ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
 			path.draw();
 		}
 	});
