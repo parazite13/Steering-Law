@@ -118,9 +118,10 @@
 					</form>
 				</section>
 			</div>
-
 		</div>
-		
+		<canvas id="canvasAdmin" style="width: 100%; height:90vh; cursor: crosshair; background: #FFFFFF;">
+			Je suis un Canvas et je me porte mal.
+		</canvas>
 
 	<?php else: ?>
 
@@ -155,8 +156,22 @@
 
 </body>
 
+
 <script type="text/javascript">
-	
+
+//canvas et contexte
+var canvas = $('#canvasAdmin');
+canvas[0].width = $("#canvasAdmin").width();
+canvas[0].height = $("#canvasAdmin").height();
+var ctx = canvas[0].getContext('2d');
+//couleurs
+var colorStart = '#00ff00';
+var colorEnd = '#ff0000';
+var colorWay = '#e8e8e8';
+var colorBackground = '#ffffff';
+var colorBackPixelsGood = '#00ff00';
+var colorBackPixelsBad = '#ff0000';
+
 $(document).ready(function(){
 
 	// Menu onglet
@@ -185,10 +200,24 @@ $(document).ready(function(){
 			</tr>\
 		';
 		$(html).insertBefore("#add-primitive");
-	})
+	});
 
+	//Prévisualisation
+	//primitives
+	var inputs = $('tbody>tr input');
+	$('tbody>tr input').change(function(){
+		if(inputs[0].value != "" && inputs[1].value != ""){
+			var radius = 1 / inputs[0].value;
+			var angle =  inputs[1].value;
+			var path = new Path();
+			path.add(new Arc(radius, angle, "#e8e8e8"));
+			ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
+			path.draw();
+		}
+	});
 })
 
 </script>
-
+<script type="text/javascript" src="../js/Arc.js"></script>
+<script type="text/javascript" src="../js/Path.js"></script>
 </html>

@@ -17,8 +17,8 @@
 		<div class="container-fluid">
 			<div id="headExperience">
 				<p>
-					Quand vous êtes prêt, cliquez sur la zone verte pour lancer l'expérience puis effectuez le chemin tracé le plus rapidement et le plus précisément possible.<br>
-					Le chronomètre démarre dès le clique sur la zone verte effectué.
+					Quand vous êtes prêt, passez sur la zone verte et suivez le chemin pour lancer l'expérience puis effectuez le chemin tracé le plus rapidement et le plus précisément possible.<br>
+					Le chronomètre démarre dès que vous passez de la zone de départ au chemin.
 				</p>
 				<button class="btn btn-primary mb-2" id="trainExperience" role="button" onclick="isTraining = true; start()">S'entrainer</button>
 				<button class="btn btn-primary mb-2" id="startExperience" role="button" onclick="isTraining = false; start()">Démarrer</button>
@@ -36,6 +36,8 @@
 
 </body>
 
+<script type="text/javascript" src="js/Arc.js"></script>
+<script type="text/javascript" src="js/Path.js"></script>
 <script type="text/javascript" src="js/script.js"></script>
 
 </html>
