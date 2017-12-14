@@ -6,6 +6,7 @@ class MongoDb{
 	private $nomBd;
 
 	/*
+	[id] => 1
 	[primitives] => MongoDB\Model\BSONArray Object
 		(
 			[storage:ArrayObject:private] => Array

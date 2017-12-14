@@ -16,6 +16,16 @@
 
 			if(isset($_POST['add-experience'])){
 
+				// Cherche le dernier id
+				$id = 0;
+				$experiences = $db->getExperiences()->find(array(), array("summary" => true))->toArray();
+				foreach($experiences as $experience){
+					if($experience->id > $id){
+						$id = $experience->id;
+					}
+				}
+
+				// Rempli le tableau des primitives
 				$primitives = array();
 				foreach($_POST as $key => $value){
 					if($key == "add-experience") continue;
@@ -28,9 +38,12 @@
 				}
 				
 				$experience = array(
+					"id" => $id,
 					"primitives" => $primitives,
 					"current" => true
 				);
+
+				$db->getExperiences()->updateMany(array(), array('$set' => array("current" => false)));
 
 				$db->getExperiences()->insertOne($experience);
 
@@ -61,16 +74,24 @@
 							<tr>
 								<th>Expérience</th>
 								<th>Visualisation</th>
+								<th>Expérience courante</th>
 							</tr>
 						</thead>
 						<tbody>
 
-							<?php foreach($db->getExperiences()->find(array(), array('summary'=>true))->toArray() as $key => $experience): ?>
+							<?php foreach($db->getExperiences()->find(array(), array('summary'=>true))->toArray() as $experience): ?>
 								<tr>
-									<td><?= $key ?></td>
+									<td><?= $experience->id ?></td>
 									<td>
 										<!-- <canvas></canvas> -->
 										<?= json_encode($experience->primitives) ?>
+									</td>
+									<td>
+										<?php if($experience->current) : ?>										
+											<input type="radio" name="current-experience" value="<?= $experience->id ?>" checked>
+										<?php else: ?>
+											<input type="radio" name="current-experience" value="<?= $experience->id ?>">
+										<?php endif; ?>
 									</td>
 								</tr>
 							<?php endforeach; ?>
@@ -180,6 +201,11 @@ $(document).ready(function(){
 		$(this).addClass('active');
 		$('#details-content > section').addClass('d-none');
 		$('#' + $(this).attr('data-content')).removeClass('d-none');
+	});
+
+	// Selection de l'experience courante
+	$("#all-experiences input[type=radio]").click(function(){
+		$.post("ajax/setCurrentExperience.php", {id: $(this).val()});
 	});
 
 	// Ajout de primitive
