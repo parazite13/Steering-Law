@@ -16,7 +16,36 @@
 
 			if(isset($_POST['add-experience'])){
 
+				// Cherche le dernier id
+				$id = 0;
+				$experiences = $db->getExperiences()->find(array(), array("summary" => true))->toArray();
+				foreach($experiences as $experience){
+					if($experience->id > $id){
+						$id = $experience->id;
+					}
+				}
+
+				// Rempli le tableau des primitives
+				$primitives = array();
+				foreach($_POST as $key => $value){
+					if($key == "add-experience") continue;
+
+					$id = intval(substr($key, strlen($key) - 1)) - 1;
+					$input = explode("-", $key)[0];
+
+					$primitives[$id][$input] = $value;
+
+				}
 				
+				$experience = array(
+					"id" => $id,
+					"primitives" => $primitives,
+					"current" => true
+				);
+
+				$db->getExperiences()->updateMany(array(), array('$set' => array("current" => false)));
+
+				$db->getExperiences()->insertOne($experience);
 
 			}
 
@@ -38,8 +67,38 @@
 			</ul>
 			
 			<div id="details-content">
+
 				<section id="all-experiences">
-					
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Expérience</th>
+								<th>Visualisation</th>
+								<th>Expérience courante</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<?php foreach($db->getExperiences()->find(array(), array('summary'=>true))->toArray() as $experience): ?>
+								<tr>
+									<td><?= $experience->id ?></td>
+									<td>
+										<!-- <canvas></canvas> -->
+										<?= json_encode($experience->primitives) ?>
+									</td>
+									<td>
+										<?php if($experience->current) : ?>										
+											<input type="radio" name="current-experience" value="<?= $experience->id ?>" checked>
+										<?php else: ?>
+											<input type="radio" name="current-experience" value="<?= $experience->id ?>">
+										<?php endif; ?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+							
+						</tbody>
+					</table>
+
 				</section>
 
 				<section id="add-experience" class="d-none">
@@ -58,7 +117,11 @@
 								<tr id="primitive-1">
 									<td>1</td>
 									<td>
+<<<<<<< HEAD
 										<input class="form-control" type="number" name="courbure-1" min="0" max="1" step="0.0001">
+=======
+										<input class="form-control" type="number" name="courbure-1" min="0" max="0.01" step="0.001">
+>>>>>>> 06bb4be36705293763772230a9d1cf0212078b35
 									</td>
 									<td>
 										<input class="form-control" type="number" name="angle-1" min="1" max="360" step="1">
@@ -144,6 +207,11 @@ $(document).ready(function(){
 		$('#' + $(this).attr('data-content')).removeClass('d-none');
 	});
 
+	// Selection de l'experience courante
+	$("#all-experiences input[type=radio]").click(function(){
+		$.post("ajax/setCurrentExperience.php", {id: $(this).val()});
+	});
+
 	// Ajout de primitive
 	$("#add-primitive").click(function(){
 		var primitive = $("#add-experience table tr").length - 1;
@@ -151,7 +219,11 @@ $(document).ready(function(){
 			<tr id="primitive-'+primitive+'">\
 				<td>'+primitive+'</td>\
 				<td>\
+<<<<<<< HEAD
 					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.0001">\
+=======
+					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="0.01" step="0.001">\
+>>>>>>> 06bb4be36705293763772230a9d1cf0212078b35
 				</td>\
 				<td>\
 					<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
