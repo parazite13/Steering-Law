@@ -150,14 +150,16 @@ function start(){
 
 	if(isTraining){
 		path = new PathTrain();
+		draw();
 	}else{
-		path = new Path();
-		path.add(new Arc(100, Math.PI/3, colorWay));
-		path.add(new Arc(200, Math.PI/2, colorWay));
-		path.add(new Arc(300, Math.PI/2, colorWay));
-		path.add(new Arc(300, Math.PI, colorWay));
+		$.get("ajax/getCurrentExperience.php", function(experience){
+			path = new Path();
+			$.each(experience.primitives, function(key, primitive){
+				path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay));
+			});
+			draw();
+		});
 	}
-	draw();
 }
 
 

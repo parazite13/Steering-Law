@@ -17,6 +17,7 @@ $db = new MongoDb(DB_NAME);
 /*echo '<pre>';
 print_r($db->getExperiences()->find(array(), array('summary' => true))->toArray());
 die();*/
+//$db->getExperiences()->deleteOne(array("current" => true));
 
 // Initialise les variables de session
 require(ABSPATH . 'include/session.php');
