@@ -3,17 +3,25 @@ var canvas = $('#canvas');
 canvas[0].width = $("#canvas").width();
 canvas[0].height = $("#canvas").height();
 var ctx = canvas[0].getContext('2d');
+
 //variables de jeu
-var backPixels = [];	//pixels qui suit la souris
 var mouseX;
 var mouseY;
-var laGlobaleJadore = true;
 var arrayStart = [];
+var backPixels = [];
 var wayStarted = false;
 var perfectGame = true;
-var chrono;
+var chrono = new Timer();
 var isTraining;
 var path;
+
+//couleurs
+var colorStart = '#00ff00';
+var colorEnd = '#ff0000';
+var colorWay = '#e8e8e8';
+var colorBackground = '#ffffff';
+var colorBackPixelsGood = '#00ff00';
+var colorBackPixelsBad = '#ff0000';
 
 function eventListeners(){
 	canvas.mousemove(function(event){
@@ -37,14 +45,13 @@ function eventListeners(){
 				arrayStart.shift();
 			}
 			//Ca part.
-			if(arrayStart[0] == '#00ff00' && arrayStart[1] == '#e8e8e8'){
-				laGlobaleJadore = false;
+			if(arrayStart[0] == colorStart && arrayStart[1] == colorWay){
+				perfectGame = true;
 				wayStarted = true;
-				chrono = new Timer();
 				chrono.run();
 			}
 		}else{
-			if(codePixel == '#ff0000'){
+			if(codePixel == colorEnd){
 				wayStarted = false;
 				backPixels = [];
 				if(perfectGame){
@@ -57,6 +64,14 @@ function eventListeners(){
 		}
 		//$('#coordMouse').val("x : " + mouseX + "; " + " y : " + mouseY);
 	});
+}
+
+function resetVariables(){
+	arrayStart = [];
+	backPixels = [];
+	wayStarted = false;
+	perfectGame = true;
+	chrono.reset();
 }
 
 function setPixels(x, y){
@@ -78,15 +93,13 @@ function setPixels(x, y){
 		//s'il n'y rien sous notre souris (hors chemin)
 		var codePixelCurrent = '#' + data[0].toString(16).lpad(0, 2) + data[1].toString(16).lpad(0, 2) + data[2].toString(16).lpad(0, 2);
 		//souris sur fond blanc -> hors chemin
-		if(codePixelCurrent == '#ffffff'){
-			if(laGlobaleJadore){
-				laGlobaleJadore = false;
-				perfectGame = false;
+		if(codePixelCurrent == colorBackground){
+			//buzz qu'une seule fois
+			if(perfectGame){
 				$('#buzzer')[0].play();
 			}
+			perfectGame = false;
 			newPix.color = '#ff0000';
-		}else{
-			laGlobaleJadore = true;
 		}
 	}
 }
@@ -102,7 +115,7 @@ function Pixel(x, y){
 	this.x = x;
 	this.y = y;
 	this.size = 1;
-	this.color = "#00ff00"; //couleur du pixel quand il est dans le chemin
+	this.color = colorBackPixelsGood; //couleur du pixel quand il est dans le chemin
 	this.draw = function(){
 		ctx.fillStyle = this.color;
 		ctx.beginPath();
@@ -111,7 +124,7 @@ function Pixel(x, y){
 	}
 }
 
-function Arc(radius, angle, color='#e8e8e8'){
+function Arc(radius, angle, color=colorWay){
 	this.radius = radius;
 	this.angle = angle;
 	this.center = {x:0, y:0};
@@ -153,16 +166,16 @@ function drawBackPixels(){
 
 function drawBack(){
 	ctx.beginPath();
-	ctx.fillStyle = '#ffffff';
+	ctx.fillStyle = colorBackground;
 	ctx.rect(0, 0, canvas[0].width, canvas[0].height);
 	ctx.fill();
 }
 
 function start(){
+	resetVariables();
 	eventListeners();
 	//canvas[0].webkitRequestFullscreen();
 	$('#chronotime').css('visibility', 'visible');
-	backPixels = [];
 
 	if(isTraining){
 		path = new PathTrain();
@@ -236,7 +249,7 @@ function Timer(){
 
 function Path(){
 	//crée l'arc vert de départ (constante pour tous les chemins)
-	var arcStart = new Arc(1000, undefined, '#00ff00');
+	var arcStart = new Arc(1000, undefined, colorStart);
 	arcStart.center = {x:50, y:canvas[0].height / 2 + arcStart.radius};
 	arcStart.start = -Math.PI/2;
 	arcStart.end = arcStart.start - Math.PI / 100;
@@ -244,7 +257,7 @@ function Path(){
 	this.arcs = [arcStart];
 
 	//initialise un arc de fin (qui changera à chaque ajout d'arc dans le chemin)
-	var arcEnd = new Arc(1000, undefined, '#ff0000');
+	var arcEnd = new Arc(1000, undefined, colorEnd);
 	arcEnd.center = arcStart.center;
 	arcEnd.start = arcStart.start + Math.PI/100;
 	arcEnd.end = arcStart.start;
@@ -291,7 +304,7 @@ function Path(){
 	//fonction qui calcul un arc de fin selon le chemin courant et l'insert
 	this.addArcEnd = function(){
 		var lastCurrentArc = this.arcs[this.arcs.length - 1];
-		var newEnd = new Arc(lastCurrentArc.radius, undefined, '#ff0000');
+		var newEnd = new Arc(lastCurrentArc.radius, undefined, colorEnd);
 		newEnd.center = lastCurrentArc.center;
 		newEnd.end = lastCurrentArc.start;
 		if(this.arcs.length % 2 == 1){
@@ -316,7 +329,7 @@ function Path(){
 
 function PathTrain(){
 	//crée l'arc vert de départ (constante pour tous les chemins)
-	var arcStart = new Arc(canvas[0].height / 2 - 40 - 10, undefined, '#00ff00');
+	var arcStart = new Arc(canvas[0].height / 2 - 40 - 10, undefined, colorStart);
 	arcStart.center = {x:canvas[0].width / 2, y:canvas[0].height / 2};
 	arcStart.start = Math.PI + Math.PI / 50;	
 	arcStart.end = arcStart.start - Math.PI / 50;
@@ -324,7 +337,7 @@ function PathTrain(){
 	this.arcs = [arcStart];
 
 	//crée l'arc vert de départ (constante pour tous les chemins)
-	var mainArc = new Arc(arcStart.radius, undefined, '#e8e8e8');
+	var mainArc = new Arc(arcStart.radius, undefined, colorWay);
 	mainArc.center = arcStart.center;
 	mainArc.start = Math.PI - Math.PI / 25;
 	mainArc.end = arcStart.start;	
@@ -332,7 +345,7 @@ function PathTrain(){
 	this.arcs.push(mainArc);
 
 	// //initialise un arc de fin (qui changera à chaque ajout d'arc dans le chemin)
-	var arcEnd = new Arc(mainArc.radius, undefined, '#ff0000');
+	var arcEnd = new Arc(mainArc.radius, undefined, colorEnd);
 	arcEnd.center = mainArc.center;
 	arcEnd.start = Math.PI - Math.PI / 50;
 	arcEnd.end = mainArc.start;
