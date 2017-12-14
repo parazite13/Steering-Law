@@ -7,7 +7,7 @@ var ctx = canvas[0].getContext('2d');
 //variables de jeu
 var mouseX;
 var mouseY;
-var arrayStart = [];
+var arrayStartEnd = [];
 var backPixels = [];
 var wayStarted = false;
 var perfectGame = true;
@@ -40,12 +40,12 @@ function eventListeners(){
 		var codePixel = '#' + dat[0].toString(16).lpad(0, 2) + dat[1].toString(16).lpad(0, 2) + dat[2].toString(16).lpad(0, 2);
 		//le chemin commence : on passe du vert au gris 
 		if(!wayStarted){
-			arrayStart.push(codePixel);
-			if(arrayStart.length > 2){
-				arrayStart.shift();
+			arrayStartEnd.push(codePixel);
+			if(arrayStartEnd.length > 2){
+				arrayStartEnd.shift();
 			}
 			//Ca part.
-			if(arrayStart[0] == colorStart && arrayStart[1] == colorWay){
+			if(arrayStartEnd[0] == colorStart && arrayStartEnd[1] == colorWay){
 				perfectGame = true;
 				wayStarted = true;
 				chrono.run();
@@ -67,7 +67,7 @@ function eventListeners(){
 }
 
 function resetVariables(){
-	arrayStart = [];
+	arrayStartEnd = [];
 	backPixels = [];
 	wayStarted = false;
 	perfectGame = true;
@@ -124,35 +124,6 @@ function Pixel(x, y){
 	}
 }
 
-function Arc(radius, angle, color=colorWay){
-	this.radius = radius;
-	this.angle = angle;
-	this.center = {x:0, y:0};
-	this.start;
-	this.end;
-	this.isTrigonometrique;
-	this.color = color;
-	this.draw = function(){
-		ctx.strokeStyle = "#000000";
-		ctx.beginPath();
-		ctx.lineWidth = 80;
-		ctx.arc(this.center.x, this.center.y, this.radius, this.start, this.end, this.isTrigonometrique);
-		ctx.stroke();
-		
-		ctx.strokeStyle = this.color;
-		ctx.beginPath();
-		ctx.lineWidth = 76;
-		ctx.arc(this.center.x, this.center.y, this.radius, this.start, this.end, this.isTrigonometrique);
-		ctx.stroke();
-	}
-	this.getStart = function(){
-		return {x:this.center.x + this.radius * Math.cos(this.start), y:this.center.y + this.radius * Math.sin(this.start)};
-	}
-	this.getEnd = function(){
-		return {x:this.center.x + this.radius * Math.cos(this.end), y:this.center.y + this.radius * Math.sin(this.end)};
-	}
-}
-
 function drawBackPixels(){
 	for(var i = 1; i < backPixels.length; i++){
 		ctx.strokeStyle = backPixels[i-1].color;
@@ -181,10 +152,10 @@ function start(){
 		path = new PathTrain();
 	}else{
 		path = new Path();
-		path.add(new Arc(100, Math.PI/3));
-		path.add(new Arc(200, Math.PI/2));
-		path.add(new Arc(300, Math.PI/2));
-		path.add(new Arc(300, Math.PI));
+		path.add(new Arc(100, Math.PI/3, colorWay));
+		path.add(new Arc(200, Math.PI/2, colorWay));
+		path.add(new Arc(300, Math.PI/2, colorWay));
+		path.add(new Arc(300, Math.PI, colorWay));
 	}
 	draw();
 }
@@ -244,86 +215,6 @@ function Timer(){
 		this.dateStartChrono = new Date() - this.diff;
 		this.dateStartChrono = new Date(this.dateStartChrono);
 		this.run();
-	}
-}
-
-function Path(){
-	//crée l'arc vert de départ (constante pour tous les chemins)
-	var arcStart = new Arc(1000, undefined, colorStart);
-	arcStart.center = {x:50, y:canvas[0].height / 2 + arcStart.radius};
-	arcStart.start = -Math.PI/2;
-	arcStart.end = arcStart.start - Math.PI / 100;
-	arcStart.isTrigonometrique = true;
-	this.arcs = [arcStart];
-
-	//initialise un arc de fin (qui changera à chaque ajout d'arc dans le chemin)
-	var arcEnd = new Arc(1000, undefined, colorEnd);
-	arcEnd.center = arcStart.center;
-	arcEnd.start = arcStart.start + Math.PI/100;
-	arcEnd.end = arcStart.start;
-	arcEnd.isTrigonometrique = true;
-	this.arcs.push(arcEnd);
-
-	this.angle;
-	this.draw = function(){
-		$.each(this.arcs, function(index, arc){
-			arc.draw();
-		});
-	}
-	this.add = function(arc){
-		//retire le dernier élément (arc de fin de chemin)
-		this.arcs.splice(this.arcs.length - 1, 1);
-
-		//ajoute celui souhaité (faites confiance aux calculs, ça a été posé sur papier.)
-		var lastCurrentArc = this.arcs[this.arcs.length - 1];
-		var xCenter = lastCurrentArc.center.x;
-		var yCenter = lastCurrentArc.center.y;
-		var xStart = lastCurrentArc.getStart().x;
-		var yStart = lastCurrentArc.getStart().y;
-
-		this.angle = Math.atan((yCenter - yStart) / (xCenter - xStart));
-		var xNewCenter = xStart + arc.radius * Math.cos(this.angle);
-		var yNewCenter = yStart + arc.radius * Math.sin(this.angle);
-		var newCenter = {x:xNewCenter, y:yNewCenter};
-
-		arc.center = newCenter;
-		// arc.end = lastCurrentArc.start + lastCurrentArc.angle;
-		// arc.start = arc.end + lastCurrentArc.angle - this.angle;
-		arc.end = Math.PI + this.angle;
-		if(this.arcs.length % 2 == 1){
-			arc.start = arc.end - arc.angle;
-			arc.isTrigonometrique = false;
-		}else{
-			arc.start = arc.end + arc.angle;
-			arc.isTrigonometrique = true;
-		}
-		this.arcs.push(arc);
-		//recalcule le dernier arc et l'ajoute
-		this.addArcEnd();
-	}
-	//fonction qui calcul un arc de fin selon le chemin courant et l'insert
-	this.addArcEnd = function(){
-		var lastCurrentArc = this.arcs[this.arcs.length - 1];
-		var newEnd = new Arc(lastCurrentArc.radius, undefined, colorEnd);
-		newEnd.center = lastCurrentArc.center;
-		newEnd.end = lastCurrentArc.start;
-		if(this.arcs.length % 2 == 1){
-			newEnd.isTrigonometrique = true;
-			newEnd.start = newEnd.end + Math.PI/(lastCurrentArc.radius / 10);
-		}else{
-			newEnd.isTrigonometrique = false;
-			newEnd.start = newEnd.end - Math.PI/(lastCurrentArc.radius / 10);
-		}
-		this.arcs.push(newEnd);
-	}
-	//fonction qui change la couleur de tous les arcs du chemin (sauf départ et arrivée)
-	this.setColor = function(color){
-		var lastIndex = this.arcs.length - 1;
-		$.each(this.arcs, function(index, arc){
-			if(index != 0 && index != lastIndex){
-				arc.color = color;
-			}
-		});
 	}
 }
 
