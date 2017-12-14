@@ -58,7 +58,7 @@
 								<tr id="primitive-1">
 									<td>1</td>
 									<td>
-										<input class="form-control" type="number" name="courbure-1" min="0" max="1" step="0.01">
+										<input class="form-control" type="number" name="courbure-1" min="0" max="1" step="0.0001">
 									</td>
 									<td>
 										<input class="form-control" type="number" name="angle-1" min="1" max="360" step="1">
@@ -151,7 +151,7 @@ $(document).ready(function(){
 			<tr id="primitive-'+primitive+'">\
 				<td>'+primitive+'</td>\
 				<td>\
-					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.01">\
+					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.0001">\
 				</td>\
 				<td>\
 					<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
@@ -162,22 +162,31 @@ $(document).ready(function(){
 			</tr>\
 		';
 		$(html).insertBefore("#add-primitive");
+		setVisualisation();
 	});
 
-	//Prévisualisation
-	//primitives
-	var inputs = $('tbody>tr input');
-	$('tbody>tr input').change(function(){
-		if(inputs[0].value != "" && inputs[1].value != ""){
-			var radius = 1 / inputs[0].value;
-			var angle =  inputs[1].value;
-			var path = new Path();
-			path.add(new Arc(radius, angle, "#e8e8e8"));
-			ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
-			path.draw();
-		}
-	});
-})
+	var path = new Path();
+	function setVisualisation(){
+		path.add(new Arc(200, Math.PI/10, "#e8e8e8"));
+		console.log(path);
+		var primitives = $('tbody>tr');
+		$.each(primitives, function(index){
+			//on prend pas le dernier tr -> Bouton
+			if(index < primitives.length - 1){
+				var inputs = $(this).find('input');
+				inputs.change(function(){
+					if(inputs[0].value != "" && inputs[1].value != ""){
+						var radius = 1 / inputs[0].value;
+						var angle =  Math.PI * inputs[1].value / 180;
+						//path.setArc(index + 1, radius, angle);
+						ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
+						path.draw();
+					}
+				});
+			}
+		});
+	}
+});
 
 </script>
 <script type="text/javascript" src="../js/Arc.js"></script>

@@ -15,7 +15,6 @@ function Path(){
 	arcEnd.isTrigonometrique = true;
 	this.arcs.push(arcEnd);
 
-	this.angle;
 	this.draw = function(){
 		$.each(this.arcs, function(index, arc){
 			arc.draw();
@@ -32,25 +31,55 @@ function Path(){
 		var xStart = lastCurrentArc.getStart().x;
 		var yStart = lastCurrentArc.getStart().y;
 
-		this.angle = Math.atan((yCenter - yStart) / (xCenter - xStart));
-		var xNewCenter = xStart + arc.radius * Math.cos(this.angle);
-		var yNewCenter = yStart + arc.radius * Math.sin(this.angle);
+		var angle = Math.atan((yCenter - yStart) / (xCenter - xStart));
+		var xNewCenter = xStart + arc.radius * Math.cos(angle);
+		var yNewCenter = yStart + arc.radius * Math.sin(angle);
 		var newCenter = {x:xNewCenter, y:yNewCenter};
 
 		arc.center = newCenter;
-		// arc.end = lastCurrentArc.start + lastCurrentArc.angle;
-		// arc.start = arc.end + lastCurrentArc.angle - this.angle;
-		arc.end = Math.PI + this.angle;
-		if(this.arcs.length % 2 == 1){
-			arc.start = arc.end - arc.angle;
-			arc.isTrigonometrique = false;
+		console.log(angle);
+		console.log("Il y a " + this.arcs.length + " arcs + celui qu'on rajoute + l'arrivée");
+		if(angle < 0 ){
+			angle = Math.abs(angle);
+			if(this.arcs.length % 2 == 1){
+				//on va dire OK
+				arc.end = Math.PI - angle;
+				arc.start = arc.end - arc.angle;
+				arc.isTrigonometrique = false;
+			}else{
+				arc.end =  Math.PI - angle;
+				arc.start = arc.end + arc.angle;
+				arc.isTrigonometrique = true;
+			}
 		}else{
-			arc.start = arc.end + arc.angle;
-			arc.isTrigonometrique = true;
+			if(this.arcs.length % 2 == 1){
+				arc.end = Math.PI + angle;
+				arc.start = arc.end - arc.angle;
+				arc.isTrigonometrique = false;
+			}else{
+				arc.end = Math.PI + angle;
+				arc.start = arc.end + arc.angle;
+				arc.isTrigonometrique = true;
+			}
 		}
 		this.arcs.push(arc);
 		//recalcule le dernier arc et l'ajoute
 		this.addArcEnd();
+	}
+	this.setArc = function(index, radius, angle){
+		this.arcs[index].radius = radius;
+		this.arcs[index].angle = angle;
+
+		if(index % 2 == 1){
+			this.arcs[index].start = this.arcs[index].end - this.arcs[index].angle;
+		}else{
+			this.arcs[index].start = this.arcs[index].end + this.arcs[index].angle;
+		}
+
+		//retire le dernier élémentpuis le rajoute (recalcule)
+		this.arcs.splice(this.arcs.length - 1, 1);
+		this.addArcEnd();
+
 	}
 	//fonction qui calcul un arc de fin selon le chemin courant et l'insert
 	this.addArcEnd = function(){

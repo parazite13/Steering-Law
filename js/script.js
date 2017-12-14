@@ -62,7 +62,7 @@ function eventListeners(){
 				}
 			}
 		}
-		//$('#coordMouse').val("x : " + mouseX + "; " + " y : " + mouseY);
+		$('#coordMouse').val("x : " + mouseX + "; " + " y : " + mouseY);
 	});
 }
 
@@ -152,11 +152,14 @@ function start(){
 		path = new PathTrain();
 	}else{
 		path = new Path();
-		path.add(new Arc(100, Math.PI/3, colorWay));
-		path.add(new Arc(200, Math.PI/2, colorWay));
-		path.add(new Arc(300, Math.PI/2, colorWay));
-		path.add(new Arc(300, Math.PI, colorWay));
+		path.add(new Arc(100, Math.PI/2, colorWay));
+		path.add(new Arc(100, 2*Math.PI/3, colorWay));
+		path.add(new Arc(100, Math.PI/2, colorWay));
+		path.add(new Arc(100, Math.PI/2, colorWay));
+		path.add(new Arc(100, Math.PI/2, colorWay));
+		path.add(new Arc(100, Math.PI/2, colorWay));
 	}
+	console.log(path);
 	draw();
 }
 
