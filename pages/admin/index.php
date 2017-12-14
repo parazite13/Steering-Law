@@ -16,7 +16,23 @@
 
 			if(isset($_POST['add-experience'])){
 
+				$primitives = array();
+				foreach($_POST as $key => $value){
+					if($key == "add-experience") continue;
+
+					$id = intval(substr($key, strlen($key) - 1)) - 1;
+					$input = explode("-", $key)[0];
+
+					$primitives[$id][$input] = $value;
+
+				}
 				
+				$experience = array(
+					"primitives" => $primitives,
+					"current" => true
+				);
+
+				$db->getExperiences()->insertOne($experience);
 
 			}
 
@@ -38,8 +54,30 @@
 			</ul>
 			
 			<div id="details-content">
+
 				<section id="all-experiences">
-					
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Expérience</th>
+								<th>Visualisation</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<?php foreach($db->getExperiences()->find(array(), array('summary'=>true))->toArray() as $key => $experience): ?>
+								<tr>
+									<td><?= $key ?></td>
+									<td>
+										<!-- <canvas></canvas> -->
+										<?= json_encode($experience->primitives) ?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+							
+						</tbody>
+					</table>
+
 				</section>
 
 				<section id="add-experience" class="d-none">

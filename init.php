@@ -14,12 +14,17 @@ require(ABSPATH . 'include/classLoader.php');
 // Création de l'objet de connexion à la base de données
 $db = new MongoDb(DB_NAME);
 
+/*echo '<pre>';
+print_r($db->getExperiences()->find(array(), array('summary' => true))->toArray());
+die();*/
+
 // Initialise les variables de session
 require(ABSPATH . 'include/session.php');
 
 // Charge les fonctions utiles
 require(ABSPATH . 'include/functions.php');
 
-// Charge la page demandé par l'utilisateur
-require(ABSPATH . 'include/dispatcher.php');
+if(!isset($ajax)){
+	require(ABSPATH . 'include/dispatcher.php');
+}
 ?>
