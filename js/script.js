@@ -152,18 +152,38 @@ function start(){
 		path = new PathTrain();
 		draw();
 	}else{
-<<<<<<< HEAD
 		path = new Path();
-		path.add(new Arc(100, Math.PI/2, colorWay));
 		path.add(new Arc(100, 2*Math.PI/3, colorWay));
-		path.add(new Arc(100, Math.PI/2, colorWay));
-		path.add(new Arc(100, Math.PI/2, colorWay));
-		path.add(new Arc(100, Math.PI/2, colorWay));
-		path.add(new Arc(100, Math.PI/2, colorWay));
+		path.add(new Arc(150, 5*Math.PI/4, colorWay));
+		path.add(new Arc(200, Math.PI/3, colorWay));
+		path.add(new Arc(70, 4*Math.PI/3, colorWay));
+		path.add(new Arc(60, 5*Math.PI/4, colorWay));
+		path.add(new Arc(100, Math.PI/3, colorWay));
+		path.add(new Arc(100, 3*Math.PI/4, colorWay));
+		path.add(new Arc(5000, Math.PI/23, colorWay));
+		path.add(new Arc(100, 5*Math.PI/4, colorWay));
+		path.add(new Arc(200, 3*Math.PI/4, colorWay));
+		path.add(new Arc(100, Math.PI/5, colorWay));
+		path.add(new Arc(100, Math.PI, colorWay));
+		path.add(new Arc(300, 2*Math.PI/3, colorWay));
+		path.add(new Arc(60, 5*Math.PI/4, colorWay));
+		path.add(new Arc(60, 5*Math.PI/4, colorWay));
+		path.add(new Arc(60, 11*Math.PI/9, colorWay));
+		path.add(new Arc(400, Math.PI/3, colorWay));
+		path.add(new Arc(70, Math.PI/3, colorWay));
+		path.add(new Arc(70, Math.PI/3, colorWay));
+		path.add(new Arc(70, Math.PI/3, colorWay));
+		path.add(new Arc(50, Math.PI, colorWay));
+		path.add(new Arc(2000, Math.PI/15, colorWay));
+		path.add(new Arc(100, 4*Math.PI/3, colorWay));
+		path.add(new Arc(50, Math.PI, colorWay));
+		path.add(new Arc(3000, Math.PI/100, colorWay));
+		path.add(new Arc(150, 3*Math.PI/4, colorWay));
+		path.add(new Arc(70, Math.PI/3, colorWay));
+		draw();
 	}
 	console.log(path);
-	draw();
-=======
+		/*
 		$.get("ajax/getCurrentExperience.php", function(experience){
 			path = new Path();
 			$.each(experience.primitives, function(key, primitive){
@@ -171,8 +191,7 @@ function start(){
 			});
 			draw();
 		});
-	}
->>>>>>> 06bb4be36705293763772230a9d1cf0212078b35
+	}*/
 }
 
 

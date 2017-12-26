@@ -32,36 +32,110 @@ function Path(){
 		var yStart = lastCurrentArc.getStart().y;
 
 		var angle = Math.atan((yCenter - yStart) / (xCenter - xStart));
-		var xNewCenter = xStart + arc.radius * Math.cos(angle);
-		var yNewCenter = yStart + arc.radius * Math.sin(angle);
+
+		var xNewCenter;
+		var yNewCenter;
+
+		// postion du début de l'arc d'avant, incrémenté de 1 a chaque quart de cercle
+		// dans le sens trigo du canvas
+		// en bas a droite => 1, en bas a gauche => 2...
+		var config;
+		
+		if(lastCurrentArc.getStart().x < lastCurrentArc.center.x){
+			if(lastCurrentArc.getStart().y < lastCurrentArc.center.y){
+				config = 3;
+			}else{
+				config = 2;
+			}
+		}else{
+			if(lastCurrentArc.getStart().y < lastCurrentArc.center.y){
+				config = 4;
+			}else{
+				config = 1;
+			}
+		}
+
+		switch(config){
+			case 1:
+				xNewCenter = xStart + arc.radius * Math.cos(angle);
+				yNewCenter = yStart + arc.radius * Math.sin(angle);
+				break;
+			case 2:
+				xNewCenter = xStart - arc.radius * Math.cos(angle);
+				yNewCenter = yStart - arc.radius * Math.sin(angle);
+				break;
+			case 3:
+				xNewCenter = xStart - arc.radius * Math.cos(angle);
+				yNewCenter = yStart - arc.radius * Math.sin(angle);
+				break;
+			case 4:
+				xNewCenter = xStart + arc.radius * Math.cos(angle);
+				yNewCenter = yStart + arc.radius * Math.sin(angle);
+				break;
+		}
+		
 		var newCenter = {x:xNewCenter, y:yNewCenter};
 
 		arc.center = newCenter;
-		console.log(angle);
-		console.log("Il y a " + this.arcs.length + " arcs + celui qu'on rajoute + l'arrivée");
-		if(angle < 0 ){
-			angle = Math.abs(angle);
-			if(this.arcs.length % 2 == 1){
-				//on va dire OK
-				arc.end = Math.PI - angle;
-				arc.start = arc.end - arc.angle;
-				arc.isTrigonometrique = false;
-			}else{
-				arc.end =  Math.PI - angle;
-				arc.start = arc.end + arc.angle;
-				arc.isTrigonometrique = true;
-			}
+
+		// Cas particulier pour le premier		
+		if(this.arcs.length == 1){
+			arc.end = Math.PI + angle;
+			arc.start = arc.end - arc.angle;
+			arc.isTrigonometrique = false;
+
+		// Sinon c'est en fonction du sens trigo ou non de l'arc d'avant
 		}else{
-			if(this.arcs.length % 2 == 1){
-				arc.end = Math.PI + angle;
-				arc.start = arc.end - arc.angle;
-				arc.isTrigonometrique = false;
+			if(lastCurrentArc.isTrigonometrique){
+				// Et aussi en fonction de la config
+				switch(config){
+					case 1:
+						arc.end = Math.PI + angle;
+						arc.start = arc.end - arc.angle;
+						arc.isTrigonometrique = false;
+						break;
+					case 2:
+						arc.end = angle;
+						arc.start = arc.end - arc.angle;
+						arc.isTrigonometrique = false;
+						break;
+					case 3:
+						arc.end = angle;
+						arc.start = arc.end - arc.angle;
+						arc.isTrigonometrique = false;
+						break;
+					case 4:
+						arc.end = Math.PI + angle;
+						arc.start = arc.end - arc.angle;
+						arc.isTrigonometrique = false;
+						break;
+				}
 			}else{
-				arc.end = Math.PI + angle;
-				arc.start = arc.end + arc.angle;
-				arc.isTrigonometrique = true;
+				switch(config){
+					case 1:
+						arc.end = Math.PI + angle;
+						arc.start = arc.end + arc.angle;
+						arc.isTrigonometrique = true;
+						break;
+					case 2:
+						arc.end = angle;
+						arc.start = arc.end + arc.angle;
+						arc.isTrigonometrique = true;
+						break;
+					case 3:
+						arc.end = angle;
+						arc.start = arc.end + arc.angle;
+						arc.isTrigonometrique = true;
+						break;
+					case 4:
+						arc.end = Math.PI + angle;
+						arc.start = arc.end + arc.angle;
+						arc.isTrigonometrique = true;
+						break;
+				}
 			}
 		}
+
 		this.arcs.push(arc);
 		//recalcule le dernier arc et l'ajoute
 		this.addArcEnd();
