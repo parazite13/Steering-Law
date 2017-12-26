@@ -117,11 +117,7 @@
 								<tr id="primitive-1">
 									<td>1</td>
 									<td>
-<<<<<<< HEAD
 										<input class="form-control" type="number" name="courbure-1" min="0" max="1" step="0.0001">
-=======
-										<input class="form-control" type="number" name="courbure-1" min="0" max="0.01" step="0.001">
->>>>>>> 06bb4be36705293763772230a9d1cf0212078b35
 									</td>
 									<td>
 										<input class="form-control" type="number" name="angle-1" min="1" max="360" step="1">
@@ -219,11 +215,7 @@ $(document).ready(function(){
 			<tr id="primitive-'+primitive+'">\
 				<td>'+primitive+'</td>\
 				<td>\
-<<<<<<< HEAD
 					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.0001">\
-=======
-					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="0.01" step="0.001">\
->>>>>>> 06bb4be36705293763772230a9d1cf0212078b35
 				</td>\
 				<td>\
 					<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
