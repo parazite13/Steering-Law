@@ -30,15 +30,15 @@
 				foreach($_POST as $key => $value){
 					if($key == "add-experience") continue;
 
-					$id = intval(substr($key, strlen($key) - 1)) - 1;
+					$primitiveId = intval(substr($key, strlen($key) - 1)) - 1;
 					$input = explode("-", $key)[0];
 
-					$primitives[$id][$input] = $value;
+					$primitives[$primitiveId][$input] = $value;
 
 				}
 				
 				$experience = array(
-					"id" => $id,
+					"id" => ++$id,
 					"primitives" => $primitives,
 					"current" => true
 				);
