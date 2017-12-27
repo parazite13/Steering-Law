@@ -148,21 +148,7 @@ function Path(){
 		//recalcule le dernier arc et l'ajoute
 		this.addArcEnd();
 	}
-	this.setArc = function(index, radius, angle){
-		this.arcs[index].radius = radius;
-		this.arcs[index].angle = angle;
-
-		if(index % 2 == 1){
-			this.arcs[index].start = this.arcs[index].end - this.arcs[index].angle;
-		}else{
-			this.arcs[index].start = this.arcs[index].end + this.arcs[index].angle;
-		}
-
-		//retire le dernier élémentpuis le rajoute (recalcule)
-		this.arcs.splice(this.arcs.length - 1, 1);
-		this.addArcEnd();
-
-	}
+	
 	//fonction qui calcul un arc de fin selon le chemin courant et l'insert
 	this.addArcEnd = function(){
 		var lastCurrentArc = this.arcs[this.arcs.length - 1];

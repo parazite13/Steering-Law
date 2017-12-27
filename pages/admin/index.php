@@ -118,12 +118,9 @@
 									<td>1</td>
 									<td>
 										<input class="form-control" type="number" name="courbure-1" min="0" max="1" step="0.0001">
-									</td>
+									</td>	
 									<td>
 										<input class="form-control" type="number" name="angle-1" min="1" max="360" step="1">
-									</td>
-									<td>
-										<canvas class="visualisation-1"></canvas>
 									</td>
 								</tr>
 								<tr id="add-primitive" style="cursor: pointer">
@@ -220,36 +217,35 @@ $(document).ready(function(){
 				<td>\
 					<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
 				</td>\
-				<td>\
-					<canvas id="visualisation-'+primitive+'"></canvas>\
-				</td>\
 			</tr>\
 		';
 		$(html).insertBefore("#add-primitive");
 		setVisualisation();
 	});
 
-	var path = new Path();
+	//setVisualisation est appelée dès le début pour la 1ère prmituve affichée et à chaque fois qu'on en crée une
+	setVisualisation();
 	function setVisualisation(){
-		path.add(new Arc(200, Math.PI/10, "#e8e8e8"));
-		console.log(path);
-		var primitives = $('tbody>tr');
-		$.each(primitives, function(index){
-			//on prend pas le dernier tr -> Bouton
-			if(index < primitives.length - 1){
-				var inputs = $(this).find('input');
-				inputs.change(function(){
+		$('tbody>tr:not(:last-child)').change(function(){
+			console.log('cc');
+			var path = new Path();
+			var primitives = $('tbody>tr');
+			$.each(primitives, function(index){
+				//on prend pas le dernier tr -> Bouton
+				if(index < primitives.length - 1){
+					var inputs = $(this).find('input');
 					if(inputs[0].value != "" && inputs[1].value != ""){
 						var radius = 1 / inputs[0].value;
 						var angle =  Math.PI * inputs[1].value / 180;
-						//path.setArc(index + 1, radius, angle);
+						path.add(new Arc(radius, angle, colorWay));
 						ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
 						path.draw();
 					}
-				});
-			}
+				}
+			});
 		});
 	}
+
 });
 
 </script>
