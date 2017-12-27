@@ -15,7 +15,6 @@
 		<?php 
 
 			if(isset($_POST['add-experience'])){
-
 				// Cherche le dernier id
 				$id = 0;
 				$experiences = $db->getExperiences()->find(array(), array("summary" => true))->toArray();
@@ -46,7 +45,6 @@
 				$db->getExperiences()->updateMany(array(), array('$set' => array("current" => false)));
 
 				$db->getExperiences()->insertOne($experience);
-
 			}
 
 		?>
@@ -55,12 +53,12 @@
 			
 			<ul id="tabbed-menu" class="nav nav-tabs">
 				<li class="nav-item">
-					<a href="#" data-content="all-experiences" class="nav-link active">
+					<a href="#" data-content="all-experiences" class="nav-link active" onclick="$('#canvasAdmin').css('display', 'none');">
 						Expériences
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href="#" data-content="add-experience" class="nav-link">
+					<a href="#" data-content="add-experience" class="nav-link" onclick="$('#canvasAdmin').css('display', 'block');">
 						Ajouter une expérience
 					</a>
 				</li>
@@ -110,14 +108,13 @@
 									<th>Primitives</th>
 									<th>Courbure</th>
 									<th>Angle</th>
-									<th>Visualisation</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="primitives">
 								<tr id="primitive-1">
 									<td>1</td>
 									<td>
-										<input class="form-control" type="number" name="courbure-1" min="0" max="1" step="0.0001">
+										<input class="form-control" type="number" name="courbure-1" min="0" max="1" step="0.00001">
 									</td>	
 									<td>
 										<input class="form-control" type="number" name="angle-1" min="1" max="360" step="1">
@@ -137,7 +134,7 @@
 				</section>
 			</div>
 		</div>
-		<canvas id="canvasAdmin" style="width: 100%; height:90vh; cursor: crosshair; background: #FFFFFF;">
+		<canvas id="canvasAdmin" style="width: 100%; height:90vh; cursor: crosshair; background: #FFFFFF; display: none;">
 			Je suis un Canvas et je me porte mal.
 		</canvas>
 
@@ -212,7 +209,7 @@ $(document).ready(function(){
 			<tr id="primitive-'+primitive+'">\
 				<td>'+primitive+'</td>\
 				<td>\
-					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.0001">\
+					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.00001">\
 				</td>\
 				<td>\
 					<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
@@ -226,14 +223,15 @@ $(document).ready(function(){
 	//setVisualisation est appelée dès le début pour la 1ère prmituve affichée et à chaque fois qu'on en crée une
 	setVisualisation();
 	function setVisualisation(){
-		$('tbody>tr:not(:last-child)').change(function(){
+		$('#primitives>tr:not(:last-child)').change(function(){
 			console.log('cc');
 			var path = new Path();
-			var primitives = $('tbody>tr');
+			var primitives = $('#primitives>tr');
 			$.each(primitives, function(index){
 				//on prend pas le dernier tr -> Bouton
 				if(index < primitives.length - 1){
 					var inputs = $(this).find('input');
+					console.log(inputs);
 					if(inputs[0].value != "" && inputs[1].value != ""){
 						var radius = 1 / inputs[0].value;
 						var angle =  Math.PI * inputs[1].value / 180;
