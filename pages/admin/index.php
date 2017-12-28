@@ -45,6 +45,9 @@
 				$db->getExperiences()->updateMany(array(), array('$set' => array("current" => false)));
 
 				$db->getExperiences()->insertOne($experience);
+
+				header("Location: " . getCurrentUrl());
+				exit();
 			}
 
 		?>
