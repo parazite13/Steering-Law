@@ -227,7 +227,7 @@
 
 		// Selection de l'experience courante
 		$("#all-experiences input[type=radio]").click(function(){
-			$.post("ajax/setCurrentExperience.php", {id: $(this).val()});
+			$.post("<?=ABSURL?>ajax/setCurrentExperience.php", {id: $(this).val()});
 		});
 
 		// Ajout de primitive
@@ -258,6 +258,7 @@
 				var angle =  Math.PI * primitive.angle / 180;
 				path.add(new Arc(radius, angle, colorWay));
 			});
+			path.setWidth(experience.width);
 			path.draw();
 		});
 

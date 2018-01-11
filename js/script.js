@@ -157,6 +157,7 @@ function start(){
 			$.each(experience.primitives, function(key, primitive){
 				path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay));
 			});
+			path.setWidth(experience.width);
 			draw();
 		});
 	}
