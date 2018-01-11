@@ -28,7 +28,7 @@
 				// Rempli le tableau des primitives
 				$primitives = array();
 				foreach($_POST as $key => $value){
-					if($key == "add-experience") continue;
+					if(strpos($key, "courbure-") === false && strpos($key, "angle-") === false)continue;
 
 					$primitiveId = intval(substr($key, strlen($key) - 1)) - 1;
 					$input = explode("-", $key)[0];
@@ -52,6 +52,8 @@
 				header("Location: " . getCurrentUrl());
 				exit();
 			}
+
+			$experiences = $db->getExperiences()->find(array(), array('summary'=>true))->toArray();
 
 		?>
 
@@ -85,14 +87,13 @@
 						</thead>
 						<tbody>
 
-							<?php foreach($db->getExperiences()->find(array(), array('summary'=>true))->toArray() as $experience): ?>
+							<?php foreach($experiences as $experience): ?>
 								<tr>
 									<td><?= $experience->id ?></td>
 									<td><?= $experience->length ?></td>
 									<td><?= $experience->width ?></td>
 									<td>
-										<!-- <canvas></canvas> -->
-										<?= json_encode($experience->primitives) ?>
+										<canvas id="visualisation-<?=$experience->id?>" class="visualisation" style="width: 100%;height: auto;"></canvas>
 									</td>
 									<td>
 										<?php if($experience->current) : ?>										
@@ -191,93 +192,117 @@
 
 </body>
 
+<?php if(isAdmin()): ?>
+	<script type="text/javascript">
 
-<script type="text/javascript">
+	//canvas et contexte
+	var canvas = $('#canvasAdmin');
+	canvas[0].width = $("#canvasAdmin").width();
+	canvas[0].height = $("#canvasAdmin").height();
+	var ctx = canvas[0].getContext('2d');
 
-//canvas et contexte
-var canvas = $('#canvasAdmin');
-canvas[0].width = $("#canvasAdmin").width();
-canvas[0].height = $("#canvasAdmin").height();
-var ctx = canvas[0].getContext('2d');
-//couleurs
-var colorStart = '#00ff00';
-var colorEnd = '#ff0000';
-var colorWay = '#e8e8e8';
-var colorBackground = '#ffffff';
-var colorBackPixelsGood = '#00ff00';
-var colorBackPixelsBad = '#ff0000';
-
-$(document).ready(function(){
-
-	// Menu onglet
-	$('#tabbed-menu a').click(function(){
-		$('#tabbed-menu a').removeClass('active');
-		$(this).addClass('active');
-		$('#details-content > section').addClass('d-none');
-		$('#' + $(this).attr('data-content')).removeClass('d-none');
+	var canvasVisualisation = $('.visualisation');
+	$.each(canvasVisualisation, function(index, visualisation){
+		visualisation.width = canvas.width();
+		visualisation.height = canvas.height();
 	});
 
-	// Selection de l'experience courante
-	$("#all-experiences input[type=radio]").click(function(){
-		$.post("ajax/setCurrentExperience.php", {id: $(this).val()});
-	});
+	//couleurs
+	var colorStart = '#00ff00';
+	var colorEnd = '#ff0000';
+	var colorWay = '#e8e8e8';
+	var colorBackground = '#ffffff';
+	var colorBackPixelsGood = '#00ff00';
+	var colorBackPixelsBad = '#ff0000';
 
-	// Ajout de primitive
-	$("#add-primitive").click(function(){
-		var primitive = $("#add-experience table tr").length - 1;
-		html = '\
-			<tr id="primitive-'+primitive+'">\
-				<td>'+primitive+'</td>\
-				<td>\
-					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.00001">\
-				</td>\
-				<td>\
-					<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
-				</td>\
-			</tr>\
-		';
-		$(html).insertBefore("#add-primitive");
-		setVisualisation();
-	});
+	$(document).ready(function(){
 
-	$('#path-width').change(refreshPath);
+		// Menu onglet
+		$('#tabbed-menu a').click(function(){
+			$('#tabbed-menu a').removeClass('active');
+			$(this).addClass('active');
+			$('#details-content > section').addClass('d-none');
+			$('#' + $(this).attr('data-content')).removeClass('d-none');
+		});
 
-	//setVisualisation est appelée dès le début pour la 1ère prmitive affichée et à chaque fois qu'on en crée une
-	setVisualisation();
+		// Selection de l'experience courante
+		$("#all-experiences input[type=radio]").click(function(){
+			$.post("ajax/setCurrentExperience.php", {id: $(this).val()});
+		});
 
-});
+		// Ajout de primitive
+		$("#add-primitive").click(function(){
+			var primitive = $("#add-experience table tr").length - 1;
+			html = '\
+				<tr id="primitive-'+primitive+'">\
+					<td>'+primitive+'</td>\
+					<td>\
+						<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.00001">\
+					</td>\
+					<td>\
+						<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
+					</td>\
+				</tr>\
+			';
+			$(html).insertBefore("#add-primitive");
+			setVisualisation();
+		});
 
-function setVisualisation(){
-	$('#primitives>tr:not(:last-child)').change(refreshPath);
-}
-
-function refreshPath(){
-	var path = new Path();
-	var primitives = $('#primitives>tr');
-	var pathLength = 0;
-	$.each(primitives, function(index){
-		//on prend pas le dernier tr -> Bouton
-		if(index < primitives.length - 1){
-			var inputs = $(this).find('input');
-			if(inputs[0].value != "" && inputs[1].value != ""){
-				var radius = 1 / inputs[0].value;
-				var angle =  Math.PI * inputs[1].value / 180;
+		// Affiche les visualisations
+		<?php echo 'var json = ' . json_encode($experiences) . ';'; ?>
+		$.each(json, function(index, experience){
+			var ctx = $('#visualisation-' + experience.id)[0].getContext('2d');
+			var path = new Path(ctx);
+			$.each(experience.primitives, function(i, primitive){
+				var radius = 1 / primitive.courbure;
+				var angle =  Math.PI * primitive.angle / 180;
 				path.add(new Arc(radius, angle, colorWay));
-				ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
+			});
+			path.draw();
+		});
 
-				pathLength += angle * radius;
-			}
-		}
+		// Change la visualisation lorsque la largeur change
+		$('#path-width').change(refreshPath);
+
+		//setVisualisation est appelée dès le début pour la 1ère prmitive affichée et à chaque fois qu'on en crée une
+		setVisualisation();
+
 	});
 
-	path.setWidth(parseInt($("#path-width").val()));
-	path.draw();
+	function setVisualisation(){
+		$('#primitives>tr:not(:last-child)').change(refreshPath);
+	}
 
-	// Ecrit la longueur du chemin
-	$('#path-length').val(Math.round(pathLength));
-}
+	function refreshPath(){
+		var path = new Path(ctx);
+		var primitives = $('#primitives>tr');
+		var pathLength = 0;
+		$.each(primitives, function(index){
+			//on prend pas le dernier tr -> Bouton
+			if(index < primitives.length - 1){
+				var inputs = $(this).find('input');
+				if(inputs[0].value != "" && inputs[1].value != ""){
+					var radius = 1 / inputs[0].value;
+					var angle =  Math.PI * inputs[1].value / 180;
+					path.add(new Arc(radius, angle, colorWay));
+					ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
 
-</script>
-<script type="text/javascript" src="../js/Arc.js"></script>
-<script type="text/javascript" src="../js/Path.js"></script>
+					pathLength += angle * radius;
+				}
+			}
+		});
+
+		path.setWidth(parseInt($("#path-width").val()));
+		path.draw();
+
+		// Ecrit la longueur du chemin
+		$('#path-length').val(Math.round(pathLength));
+	}
+
+	</script>
+	<script type="text/javascript" src="../js/Arc.js"></script>
+	<script type="text/javascript" src="../js/Path.js"></script>
+
+
+<?php endif; ?>
 </html>

@@ -1,3 +1,7 @@
 .navbar a{
 	width: fit-content;
 }
+
+#all-experiences td{
+	vertical-align: middle;
+}

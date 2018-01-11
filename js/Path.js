@@ -1,6 +1,9 @@
-function Path(){
+function Path(ctx){
+
+	this.ctx = ctx;
+
 	//crée l'arc vert de départ (constante pour tous les chemins)
-	var arcStart = new Arc(1000, undefined, colorStart);
+	var arcStart = new Arc(1000, undefined, colorStart, this.ctx);
 	arcStart.center = {x:50, y:canvas[0].height / 2 + arcStart.radius};
 	arcStart.start = -Math.PI/2;
 	arcStart.end = arcStart.start - Math.PI / 100;
@@ -8,7 +11,7 @@ function Path(){
 	this.arcs = [arcStart];
 
 	//initialise un arc de fin (qui changera à chaque ajout d'arc dans le chemin)
-	var arcEnd = new Arc(1000, undefined, colorEnd);
+	var arcEnd = new Arc(1000, undefined, colorEnd, this.ctx);
 	arcEnd.center = arcStart.center;
 	arcEnd.start = arcStart.start + Math.PI/100;
 	arcEnd.end = arcStart.start;
@@ -21,6 +24,9 @@ function Path(){
 		});
 	}
 	this.add = function(arc){
+
+		arc.ctx = this.ctx;
+
 		//retire le dernier élément (arc de fin de chemin)
 		this.arcs.splice(this.arcs.length - 1, 1);
 
@@ -152,7 +158,7 @@ function Path(){
 	//fonction qui calcul un arc de fin selon le chemin courant et l'insert
 	this.addArcEnd = function(){
 		var lastCurrentArc = this.arcs[this.arcs.length - 1];
-		var newEnd = new Arc(lastCurrentArc.radius, undefined, colorEnd);
+		var newEnd = new Arc(lastCurrentArc.radius, undefined, colorEnd, this.ctx);
 		newEnd.center = lastCurrentArc.center;
 		newEnd.end = lastCurrentArc.start;
 		if(this.arcs.length % 2 == 1){

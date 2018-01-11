@@ -149,26 +149,17 @@ function start(){
 	$('#chronotime').css('visibility', 'visible');
 
 	if(isTraining){
-		path = new PathTrain();
+		path = new PathTrain(ctx);
 		draw();
 	}else{
-		path = new Path();
-		path.add(new Arc(200, Math.PI/3, colorWay));
-		path.add(new Arc(70, 4*Math.PI/3, colorWay));
-		path.add(new Arc(60, 5*Math.PI/4, colorWay));
-		path.add(new Arc(100, Math.PI/4, colorWay));
-		path.add(new Arc(200, 3*Math.PI/4, colorWay));
-		draw();
-	}
-		/*
 		$.get("ajax/getCurrentExperience.php", function(experience){
-			path = new Path();
+			path = new Path(ctx);
 			$.each(experience.primitives, function(key, primitive){
 				path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay));
 			});
 			draw();
 		});
-	}*/
+	}
 }
 
 
@@ -229,9 +220,12 @@ function Timer(){
 	}
 }
 
-function PathTrain(){
+function PathTrain(ctx){
+
+	this.ctx = ctx
+
 	//crée l'arc vert de départ (constante pour tous les chemins)
-	var arcStart = new Arc(canvas[0].height / 2 - 40 - 10, undefined, colorStart);
+	var arcStart = new Arc(canvas[0].height / 2 - 40 - 10, undefined, colorStart, ctx);
 	arcStart.center = {x:canvas[0].width / 2, y:canvas[0].height / 2};
 	arcStart.start = Math.PI + Math.PI / 50;	
 	arcStart.end = arcStart.start - Math.PI / 50;
@@ -239,7 +233,7 @@ function PathTrain(){
 	this.arcs = [arcStart];
 
 	//crée l'arc vert de départ (constante pour tous les chemins)
-	var mainArc = new Arc(arcStart.radius, undefined, colorWay);
+	var mainArc = new Arc(arcStart.radius, undefined, colorWay, ctx);
 	mainArc.center = arcStart.center;
 	mainArc.start = Math.PI - Math.PI / 25;
 	mainArc.end = arcStart.start;	
@@ -247,7 +241,7 @@ function PathTrain(){
 	this.arcs.push(mainArc);
 
 	// //initialise un arc de fin (qui changera à chaque ajout d'arc dans le chemin)
-	var arcEnd = new Arc(mainArc.radius, undefined, colorEnd);
+	var arcEnd = new Arc(mainArc.radius, undefined, colorEnd, ctx);
 	arcEnd.center = mainArc.center;
 	arcEnd.start = Math.PI - Math.PI / 50;
 	arcEnd.end = mainArc.start;
