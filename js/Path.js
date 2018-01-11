@@ -173,4 +173,11 @@ function Path(){
 			}
 		});
 	}
+
+	// Fonction qui modifie la largeur de tous les arcs
+	this.setWidth = function(width){
+		$.each(this.arcs, function(index, arc){
+			arc.width = width;
+		});
+	}
 }

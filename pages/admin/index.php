@@ -15,6 +15,7 @@
 		<?php 
 
 			if(isset($_POST['add-experience'])){
+
 				// Cherche le dernier id
 				$id = 0;
 				$experiences = $db->getExperiences()->find(array(), array("summary" => true))->toArray();
@@ -39,6 +40,8 @@
 				$experience = array(
 					"id" => ++$id,
 					"primitives" => $primitives,
+					"length" => intval($_POST['path-length']),
+					"width" => intval($_POST['path-width']),
 					"current" => true
 				);
 
@@ -74,6 +77,8 @@
 						<thead>
 							<tr>
 								<th>Expérience</th>
+								<th>Longueur</th>
+								<th>Largeur</th>
 								<th>Visualisation</th>
 								<th>Expérience courante</th>
 							</tr>
@@ -83,6 +88,8 @@
 							<?php foreach($db->getExperiences()->find(array(), array('summary'=>true))->toArray() as $experience): ?>
 								<tr>
 									<td><?= $experience->id ?></td>
+									<td><?= $experience->length ?></td>
+									<td><?= $experience->width ?></td>
 									<td>
 										<!-- <canvas></canvas> -->
 										<?= json_encode($experience->primitives) ?>
@@ -131,6 +138,16 @@
 							</tbody>
 						</table>
 						<div class="row">
+							<div class="col">
+								<label for="path-widrh">Largeur du chemin : </label>
+								<input class="form-control" type="number" id="path-width" name="path-width" min="10" max="200" step="1" value="80">
+							</div>
+							<div class="col">
+								<label for="path-length">Longueur du chemin : </label>
+								<input class="form-control" readonly type="number" id="path-length" name="path-length" value="0">
+							</div>
+						</div>
+						<div class="row mt-2">
 							<button class="btn btn-primary" role="button" type="submit" name="add-experience" style="margin: auto">Ajouter l'expérience</button>
 						</div>
 					</form>
@@ -223,31 +240,42 @@ $(document).ready(function(){
 		setVisualisation();
 	});
 
-	//setVisualisation est appelée dès le début pour la 1ère prmituve affichée et à chaque fois qu'on en crée une
+	$('#path-width').change(refreshPath);
+
+	//setVisualisation est appelée dès le début pour la 1ère prmitive affichée et à chaque fois qu'on en crée une
 	setVisualisation();
-	function setVisualisation(){
-		$('#primitives>tr:not(:last-child)').change(function(){
-			console.log('cc');
-			var path = new Path();
-			var primitives = $('#primitives>tr');
-			$.each(primitives, function(index){
-				//on prend pas le dernier tr -> Bouton
-				if(index < primitives.length - 1){
-					var inputs = $(this).find('input');
-					console.log(inputs);
-					if(inputs[0].value != "" && inputs[1].value != ""){
-						var radius = 1 / inputs[0].value;
-						var angle =  Math.PI * inputs[1].value / 180;
-						path.add(new Arc(radius, angle, colorWay));
-						ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
-						path.draw();
-					}
-				}
-			});
-		});
-	}
 
 });
+
+function setVisualisation(){
+	$('#primitives>tr:not(:last-child)').change(refreshPath);
+}
+
+function refreshPath(){
+	var path = new Path();
+	var primitives = $('#primitives>tr');
+	var pathLength = 0;
+	$.each(primitives, function(index){
+		//on prend pas le dernier tr -> Bouton
+		if(index < primitives.length - 1){
+			var inputs = $(this).find('input');
+			if(inputs[0].value != "" && inputs[1].value != ""){
+				var radius = 1 / inputs[0].value;
+				var angle =  Math.PI * inputs[1].value / 180;
+				path.add(new Arc(radius, angle, colorWay));
+				ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
+
+				pathLength += angle * radius;
+			}
+		}
+	});
+
+	path.setWidth(parseInt($("#path-width").val()));
+	path.draw();
+
+	// Ecrit la longueur du chemin
+	$('#path-length').val(Math.round(pathLength));
+}
 
 </script>
 <script type="text/javascript" src="../js/Arc.js"></script>
