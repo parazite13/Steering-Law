@@ -239,6 +239,15 @@
 
 	$(document).ready(function(){
 
+		// Déplacement des lignes du tableau
+		$("#all-experiences tbody").sortable({
+		    items: ">",
+		    appendTo: "parent",
+		    beforeStop: function(event, ui){
+		    	
+		    }
+		}).disableSelection();
+
 		// Menu onglet
 		$('#tabbed-menu a').click(function(){
 			$('#tabbed-menu a').removeClass('active');
