@@ -23,7 +23,9 @@ function Path(ctx){
 			arc.draw();
 		});
 	}
-	this.add = function(arc){
+
+	// orientation : undefined, left ou right
+	this.add = function(arc, orientation){
 
 		arc.ctx = this.ctx;
 
@@ -61,6 +63,7 @@ function Path(ctx){
 			}
 		}
 
+
 		switch(config){
 			case 1:
 				xNewCenter = xStart + arc.radius * Math.cos(angle);
@@ -79,74 +82,82 @@ function Path(ctx){
 				yNewCenter = yStart + arc.radius * Math.sin(angle);
 				break;
 		}
+
+		var previousIsTrigo = lastCurrentArc.isTrigonometrique;
+
+		if(orientation !== undefined){
+
+			if(orientation == "right"){
+
+				xNewCenter = lastCurrentArc.getStart().x + (lastCurrentArc.getStart().x - xNewCenter);
+				yNewCenter = lastCurrentArc.getStart().y + (lastCurrentArc.getStart().y - yNewCenter);
+
+				config = ((config + 1) % 4) + 1;
+				previousIsTrigo = !previousIsTrigo;
+
+			}else if(orientation == "left"){
+
+			}
+		}
 		
 		var newCenter = {x:xNewCenter, y:yNewCenter};
-
 		arc.center = newCenter;
 
-		// Cas particulier pour le premier		
-		if(this.arcs.length == 1){
-			arc.end = Math.PI + angle;
-			arc.start = arc.end - arc.angle;
-			arc.isTrigonometrique = false;
-
-		// Sinon c'est en fonction du sens trigo ou non de l'arc d'avant
+		// en fonction du sens trigo ou non de l'arc d'avant
+		if(previousIsTrigo){
+			// Et aussi en fonction de la config
+			switch(config){
+				case 1:
+					console.log("A1");
+					arc.end = Math.PI + angle;
+					arc.start = arc.end - arc.angle;
+					arc.isTrigonometrique = false;
+					break;
+				case 2:
+					console.log("A2");
+					arc.end = angle;
+					arc.start = arc.end - arc.angle;
+					arc.isTrigonometrique = false;
+					break;
+				case 3:
+					console.log("A3");
+					arc.end = angle;
+					arc.start = arc.end - arc.angle;
+					arc.isTrigonometrique = false;
+					break;
+				case 4:
+					console.log("A4");
+					arc.end = Math.PI + angle;
+					arc.start = arc.end - arc.angle;
+					arc.isTrigonometrique = false;
+					break;
+			}
 		}else{
-			if(lastCurrentArc.isTrigonometrique){
-				// Et aussi en fonction de la config
-				switch(config){
-					case 1:
-						console.log("A1");
-						arc.end = Math.PI + angle;
-						arc.start = arc.end - arc.angle;
-						arc.isTrigonometrique = false;
-						break;
-					case 2:
-						console.log("A2");
-						arc.end = angle;
-						arc.start = arc.end - arc.angle;
-						arc.isTrigonometrique = false;
-						break;
-					case 3:
-						console.log("A3");
-						arc.end = angle;
-						arc.start = arc.end - arc.angle;
-						arc.isTrigonometrique = false;
-						break;
-					case 4:
-						console.log("A4");
-						arc.end = Math.PI + angle;
-						arc.start = arc.end - arc.angle;
-						arc.isTrigonometrique = false;
-						break;
-				}
-			}else{
-				switch(config){
-					case 1:
-						console.log("B1");
-						arc.end = Math.PI + angle;
-						arc.start = arc.end + arc.angle;
-						arc.isTrigonometrique = true;
-						break;
-					case 2:
-						console.log("B2");
-						arc.end = angle;
-						arc.start = arc.end + arc.angle;
-						arc.isTrigonometrique = true;
-						break;
-					case 3:
-						console.log("B3");
-						arc.end = angle;
-						arc.start = arc.end + arc.angle;
-						arc.isTrigonometrique = true;
-						break;
-					case 4:
-						console.log("B4");
-						arc.end = Math.PI + angle;
-						arc.start = arc.end + arc.angle;
-						arc.isTrigonometrique = true;
-						break;
-				}
+			switch(config){
+				case 1:
+					console.log("B1");
+					arc.end = Math.PI + angle;
+					arc.start = arc.end + arc.angle;
+					arc.isTrigonometrique = true;
+					break;
+				case 2:
+					console.log("B2");
+					arc.end = angle;
+					arc.start = arc.end + arc.angle;
+					arc.isTrigonometrique = true;
+					break;
+				case 3:
+					console.log("B3");
+					arc.end = angle;
+					arc.start = arc.end + arc.angle;
+					arc.isTrigonometrique = true;
+					break;
+				case 4:
+					console.log("B4");
+					arc.end = Math.PI + angle;
+					arc.start = arc.end + arc.angle;
+					arc.isTrigonometrique = true;
+					break;
 			}
 		}
 
@@ -161,7 +172,7 @@ function Path(ctx){
 		var newEnd = new Arc(lastCurrentArc.radius, undefined, colorEnd, this.ctx);
 		newEnd.center = lastCurrentArc.center;
 		newEnd.end = lastCurrentArc.start;
-		if(this.arcs.length % 2 == 1){
+		if(lastCurrentArc.isTrigonometrique){
 			newEnd.isTrigonometrique = true;
 			newEnd.start = newEnd.end + Math.PI/(lastCurrentArc.radius / 10);
 		}else{

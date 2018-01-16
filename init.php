@@ -14,7 +14,7 @@ require(ABSPATH . 'include/classLoader.php');
 // Création de l'objet de connexion à la base de données
 $db = new MongoDb(DB_NAME);
 
-// $db->getExperiences()->deleteMany(array("id" => 1));
+// $db->getExperiences()->deleteMany(array("id" => 3));
 // echo '<pre>';
 // print_r($db->getExperiences()->find(array(), array('summary' => true))->toArray());
 // die();

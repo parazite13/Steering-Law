@@ -62,12 +62,12 @@
 			<ul id="tabbed-menu" class="nav nav-tabs">
 				<li class="nav-item">
 					<a href="#" data-content="all-experiences" class="nav-link active" onclick="$('#canvasAdmin').css('display', 'none');">
-						Expériences
+						Chemins
 					</a>
 				</li>
 				<li class="nav-item">
 					<a href="#" data-content="add-experience" class="nav-link" onclick="$('#canvasAdmin').css('display', 'block');">
-						Ajouter une expérience
+						Ajouter un chemin
 					</a>
 				</li>
 			</ul>
@@ -78,9 +78,10 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>Expérience</th>
+								<th>Id</th>
 								<th>Longueur</th>
 								<th>Largeur</th>
+								<th style="width: 200px;">Primitives<br><small>(courbure, angle, longueur)</small></th>
 								<th>Visualisation</th>
 								<th>Expérience courante</th>
 							</tr>
@@ -92,6 +93,11 @@
 									<td><?= $experience->id ?></td>
 									<td><?= $experience->length ?></td>
 									<td><?= $experience->width ?></td>
+									<td>
+										<?php foreach($experience->primitives as $primitive): ?>
+											(<?= $primitive['courbure'] ?>, <?= $primitive['angle'] ?>, <?= round(1 / $primitive['courbure'] * $primitive['angle'] * pi() / 180) ?>), <br>
+										<?php endforeach; ?>
+									</td>
 									<td>
 										<canvas id="visualisation-<?=$experience->id?>" class="visualisation" style="width: 100%;height: auto;"></canvas>
 									</td>
@@ -119,20 +125,31 @@
 									<th>Primitives</th>
 									<th>Courbure</th>
 									<th>Angle</th>
+									<th>Longueur</th>
+									<th>Orientation</th>
 								</tr>
 							</thead>
 							<tbody id="primitives">
 								<tr id="primitive-1">
 									<td>1</td>
 									<td>
-										<input class="form-control" type="number" name="courbure-1" min="0" max="1" step="0.00001">
+										<input class="form-control" type="number" name="courbure-1" min="0" max="1" step="0.000001">
 									</td>	
 									<td>
-										<input class="form-control" type="number" name="angle-1" min="1" max="360" step="1">
+										<input class="form-control" type="number" name="angle-1" min="0" max="360" step="0.1">
+									</td>
+									<td>
+										<input class="form-control" type="number" disabled>
+									</td>
+									<td>
+										<select class="form-control" name="orientation-1">
+											<option value="left">Gauche</option>
+											<option value="right">Droite</option>
+										</select>
 									</td>
 								</tr>
 								<tr id="add-primitive" style="cursor: pointer">
-									<td colspan="4" style="text-align: center">
+									<td colspan="5" style="text-align: center">
 										<i class="fa fa-plus" aria-hidden="true"></i> Ajouter une primitive
 									</td>
 								</tr>
@@ -242,6 +259,12 @@
 					<td>\
 						<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
 					</td>\
+					<td>\
+						<select class="form-control" name="orientation-'+primitive+'">\
+							<option value="left">Gauche</option>\
+							<option value="right">Droite</option>\
+						</select>\
+					</td>\
 				</tr>\
 			';
 			$(html).insertBefore("#add-primitive");
@@ -284,11 +307,14 @@
 				var inputs = $(this).find('input');
 				if(inputs[0].value != "" && inputs[1].value != ""){
 					var radius = 1 / inputs[0].value;
-					var angle =  Math.PI * inputs[1].value / 180;
-					path.add(new Arc(radius, angle, colorWay));
+					var angle = Math.PI * inputs[1].value / 180;
+					var orientation = $(this).find("select").val();
+					path.add(new Arc(radius, angle, colorWay), orientation);
 					ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
 
-					pathLength += angle * radius;
+					var primitiveLength = angle * radius;
+					inputs[2].value = Math.round(primitiveLength);
+					pathLength += primitiveLength;
 				}
 			}
 		});
