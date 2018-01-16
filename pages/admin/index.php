@@ -260,6 +260,9 @@
 						<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
 					</td>\
 					<td>\
+						<input class="form-control" type="number" disabled>\
+					</td>\
+					<td>\
 						<select class="form-control" name="orientation-'+primitive+'">\
 							<option value="left">Gauche</option>\
 							<option value="right">Droite</option>\
