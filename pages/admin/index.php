@@ -28,10 +28,15 @@
 				// Rempli le tableau des primitives
 				$primitives = array();
 				foreach($_POST as $key => $value){
-					if(strpos($key, "courbure-") === false && strpos($key, "angle-") === false)continue;
+					if(strpos($key, "courbure-") === false && strpos($key, "angle-") === false && strpos($key, "orientation-") === false) continue;
 
 					$primitiveId = intval(substr($key, strlen($key) - 1)) - 1;
 					$input = explode("-", $key)[0];
+
+					// Cas particulier pour le premier gauche/droite
+					if($key == "orientation-1"){
+						$value = ($value == "left") ? "normal" : "invert";
+					}
 
 					$primitives[$primitiveId][$input] = $value;
 
@@ -139,7 +144,7 @@
 										<input class="form-control" type="number" name="angle-1" min="0" max="360" step="0.1">
 									</td>
 									<td>
-										<input class="form-control" type="number" value="invert" disabled>
+										<input class="form-control" type="number" disabled>
 									</td>
 									<td>
 										<select class="form-control" name="orientation-1">
@@ -265,7 +270,7 @@
 					<td>\
 						<div class="form-check">\
 							<label class="form-check-label">\
-								<input class="form-check-input" type="checkbox">\
+								<input class="form-check-input" type="checkbox" name="orientation-'+primitive+'" value="invert">\
 								Inverser\
 							</label>\
 						</div>\
@@ -284,7 +289,7 @@
 			$.each(experience.primitives, function(i, primitive){
 				var radius = 1 / primitive.courbure;
 				var angle =  Math.PI * primitive.angle / 180;
-				path.add(new Arc(radius, angle, colorWay));
+				path.add(new Arc(radius, angle, colorWay), primitive.orientation);
 			});
 			path.setWidth(experience.width);
 			path.draw();

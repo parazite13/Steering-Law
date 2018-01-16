@@ -155,7 +155,7 @@ function start(){
 		$.get("ajax/getCurrentExperience.php", function(experience){
 			path = new Path(ctx);
 			$.each(experience.primitives, function(key, primitive){
-				path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay));
+				path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay), primitive.orientation);
 			});
 			path.setWidth(experience.width);
 			draw();
