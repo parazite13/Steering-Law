@@ -139,7 +139,7 @@
 										<input class="form-control" type="number" name="angle-1" min="0" max="360" step="0.1">
 									</td>
 									<td>
-										<input class="form-control" type="number" disabled>
+										<input class="form-control" type="number" value="invert" disabled>
 									</td>
 									<td>
 										<select class="form-control" name="orientation-1">
@@ -263,10 +263,12 @@
 						<input class="form-control" type="number" disabled>\
 					</td>\
 					<td>\
-						<select class="form-control" name="orientation-'+primitive+'">\
-							<option value="left">Gauche</option>\
-							<option value="right">Droite</option>\
-						</select>\
+						<div class="form-check">\
+							<label class="form-check-label">\
+								<input class="form-check-input" type="checkbox">\
+								Inverser\
+							</label>\
+						</div>\
 					</td>\
 				</tr>\
 			';
@@ -311,7 +313,15 @@
 				if(inputs[0].value != "" && inputs[1].value != ""){
 					var radius = 1 / inputs[0].value;
 					var angle = Math.PI * inputs[1].value / 180;
-					var orientation = $(this).find("select").val();
+					var orientation;
+					if(index == 0){
+						orientation = $(this).find("select").val();
+						orientation = (orientation == "right") ? orientation = "invert" : undefined
+					}else{
+						orientation = inputs[3].checked;
+						orientation =  (orientation) ? "invert" : undefined;
+					}
+					console.log(orientation);
 					path.add(new Arc(radius, angle, colorWay), orientation);
 					ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
 

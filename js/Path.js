@@ -24,7 +24,7 @@ function Path(ctx){
 		});
 	}
 
-	// orientation : undefined, left ou right
+	// orientation : undefined, invert
 	this.add = function(arc, orientation){
 
 		arc.ctx = this.ctx;
@@ -87,16 +87,13 @@ function Path(ctx){
 
 		if(orientation !== undefined){
 
-			if(orientation == "right"){
+			if(orientation == "invert"){
 
 				xNewCenter = lastCurrentArc.getStart().x + (lastCurrentArc.getStart().x - xNewCenter);
 				yNewCenter = lastCurrentArc.getStart().y + (lastCurrentArc.getStart().y - yNewCenter);
 
 				config = ((config + 1) % 4) + 1;
 				previousIsTrigo = !previousIsTrigo;
-
-			}else if(orientation == "left"){
-
 			}
 		}
 		
