@@ -4,6 +4,10 @@ canvas[0].width = $("#canvas").width();
 canvas[0].height = $("#canvas").height();
 var ctx = canvas[0].getContext('2d');
 
+// chemins
+var chemins;
+var currentPath = 0;
+
 //variables de jeu
 var mouseX;
 var mouseY;
@@ -57,6 +61,16 @@ function eventListeners(){
 				if(perfectGame){
 					$('#success')[0].play();
 					chrono.pause();
+					resetVariables();
+					currentPath++;
+
+					path = new Path(ctx);
+					$.each(chemins[currentPath].primitives, function(key, primitive){
+						path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay), primitive.orientation);
+					});
+					path.setWidth(chemins[currentPath].width);
+					draw();
+
 				}else{
 					chrono.reset();
 				}
@@ -152,12 +166,13 @@ function start(){
 		path = new PathTrain(ctx);
 		draw();
 	}else{
-		$.get("ajax/getCurrentExperience.php", function(experience){
+		$.get("ajax/getCurrentExperience.php", function(result){
+			chemins = result;
 			path = new Path(ctx);
-			$.each(experience.primitives, function(key, primitive){
+			$.each(chemins[currentPath].primitives, function(key, primitive){
 				path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay), primitive.orientation);
 			});
-			path.setWidth(experience.width);
+			path.setWidth(chemins[currentPath].width);
 			draw();
 		});
 	}
@@ -210,6 +225,7 @@ function Timer(){
 	this.reset = function(){
 		clearTimeout(this.timerID);
 		$('#chronotime').val('00 : 00 : 00');
+		this.dateStartChrono = new Date();
 	}
 	this.pause = function(){
 		clearTimeout(this.timerID);

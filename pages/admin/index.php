@@ -88,7 +88,7 @@
 								<th>Largeur</th>
 								<th style="width: 200px;">Primitives<br><small>(courbure, angle, longueur)</small></th>
 								<th>Visualisation</th>
-								<th>Expérience courante</th>
+								<th>Chemins utilisé</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -108,9 +108,9 @@
 									</td>
 									<td>
 										<?php if($experience->current) : ?>										
-											<input type="radio" name="current-experience" value="<?= $experience->id ?>" checked>
+											<input type="checkbox" name="current-<?=$experience->id?>" chemin="<?=$experience->id?>" checked>
 										<?php else: ?>
-											<input type="radio" name="current-experience" value="<?= $experience->id ?>">
+											<input type="checkbox" name="current-<?=$experience->id?>" chemin="<?=$experience->id?>">
 										<?php endif; ?>
 									</td>
 								</tr>
@@ -246,7 +246,7 @@
 		    beforeStop: function(event, ui){
 		    	
 		    }
-		}).disableSelection();
+		});
 
 		// Menu onglet
 		$('#tabbed-menu a').click(function(){
@@ -257,8 +257,8 @@
 		});
 
 		// Selection de l'experience courante
-		$("#all-experiences input[type=radio]").click(function(){
-			$.post("<?=ABSURL?>ajax/setCurrentExperience.php", {id: $(this).val()});
+		$("#all-experiences input[type=checkbox]").click(function(){
+			$.post("<?=ABSURL?>ajax/setCurrentExperience.php", {value: this.checked, id: $(this).attr("chemin")});
 		});
 
 		// Ajout de primitive
