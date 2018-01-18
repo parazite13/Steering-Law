@@ -64,12 +64,15 @@ function eventListeners(){
 					resetVariables();
 					currentPath++;
 
-					path = new Path(ctx);
-					$.each(chemins[currentPath].primitives, function(key, primitive){
-						path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay), primitive.orientation);
-					});
-					path.setWidth(chemins[currentPath].width);
-					draw();
+					// il reste encore des chemins a faire
+					if(currentPath < chemins.length){
+						path = new Path(ctx);
+						$.each(chemins[currentPath].primitives, function(key, primitive){
+							path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay), primitive.orientation);
+						});
+						path.setWidth(chemins[currentPath].width);
+						draw();
+					}
 
 				}else{
 					chrono.reset();

@@ -32,6 +32,7 @@ class MongoDb{
 	[current] => 1
 	 */
 	private $experiences;
+	private $order;
 
 	function __construct($nom){
 
@@ -41,10 +42,15 @@ class MongoDb{
 		$this->bd = $client->selectDatabase($this->nomBd);
 
 		$this->experiences = $this->bd->selectCollection('experiences');
+		$this->order = $this->bd->selectCollection('order');
 	}
 
 	function getExperiences(){
 		return $this->experiences;
+	}
+
+	function getOrder(){
+		return $this->order;
 	}
 
 }

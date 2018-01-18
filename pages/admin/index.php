@@ -58,7 +58,21 @@
 				exit();
 			}
 
-			$experiences = $db->getExperiences()->find(array(), array('summary'=>true))->toArray();
+			$allExperiences = $db->getExperiences()->find(array(), array('summary' => true))->toArray();
+			$order = $db->getOrder()->findOne(array(), array('summary' => true))->order;
+
+			$experiences = array();
+
+			// on parcoure l'ordre
+			foreach($order as $id){
+
+				// on cherche le chemin avec l'id
+				foreach($allExperiences as $experience){
+					if($experience->id == $id){
+						$experiences[] = $experience;
+					}
+				}
+			}
 
 		?>
 
@@ -244,7 +258,13 @@
 		    items: ">",
 		    appendTo: "parent",
 		    beforeStop: function(event, ui){
-		    	
+		    	var order = [];
+
+		    	$.each($("#all-experiences tbody tr:not(.ui-sortable-placeholder)"), function(index, value){
+		    		order.push(parseInt($(value).find("td").first()[0].innerHTML));
+		    	});
+
+		    	$.post("<?=ABSURL?>ajax/setExperienceOrder.php", {order: order});
 		    }
 		});
 
