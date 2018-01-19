@@ -50,9 +50,16 @@
 					"current" => true
 				);
 
-				$db->getExperiences()->updateMany(array(), array('$set' => array("current" => false)));
-
 				$db->getExperiences()->insertOne($experience);
+
+				// modifie l'ordre
+				if(($order = $db->getOrder()->findOne(array(), array('summary' => true))) !== null){
+					$order->order[] = $id;
+					$db->getOrder()->drop();
+				}else{
+					$order = array("order" => array($id));
+				}
+				$db->getOrder()->insertOne($order);
 
 				header("Location: " . getCurrentUrl());
 				exit();
