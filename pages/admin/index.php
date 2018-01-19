@@ -59,20 +59,28 @@
 			}
 
 			$allExperiences = $db->getExperiences()->find(array(), array('summary' => true))->toArray();
-			$order = $db->getOrder()->findOne(array(), array('summary' => true))->order;
 
-			$experiences = array();
 
-			// on parcoure l'ordre
-			foreach($order as $id){
+			;
 
-				// on cherche le chemin avec l'id
-				foreach($allExperiences as $experience){
-					if($experience->id == $id){
-						$experiences[] = $experience;
+			if(($order = $db->getOrder()->findOne(array(), array('summary' => true))) !== null){
+				$experiences = array();
+
+				// on parcoure l'ordre
+				foreach($order->order as $id){
+
+					// on cherche le chemin avec l'id
+					foreach($allExperiences as $experience){
+						if($experience->id == $id){
+							$experiences[] = $experience;
+						}
 					}
 				}
+				
+			}else{
+				$experiences = $allExperiences;
 			}
+
 
 		?>
 
