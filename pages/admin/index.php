@@ -231,6 +231,7 @@
 							</tr>
 						</thead>
 						<tbody>
+							<?php if($db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true)) !== null): ?>
 							
 								<?php 
 								$still_time = true;
@@ -247,7 +248,7 @@
 												$current_times = $db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true))->times;
 												$current_times_array = iterator_to_array($current_times);
 											}else{
-												$current_times_array  =array();
+												$current_times_array = array();
 											}
 											if($line < count($current_times_array)){
 												$still_time = true;?>	
@@ -265,6 +266,7 @@
 								$line++;
 								}
 								?>
+							<?php endif; ?>
 						</tbody>
 					</table>
 				</section>
