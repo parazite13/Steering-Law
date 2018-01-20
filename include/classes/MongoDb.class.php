@@ -33,6 +33,7 @@ class MongoDb{
 	 */
 	private $experiences;
 	private $order;
+	private $times;
 
 	function __construct($nom){
 
@@ -43,6 +44,7 @@ class MongoDb{
 
 		$this->experiences = $this->bd->selectCollection('experiences');
 		$this->order = $this->bd->selectCollection('order');
+		$this->times = $this->bd->selectCollection('times');
 	}
 
 	function getExperiences(){
@@ -53,6 +55,9 @@ class MongoDb{
 		return $this->order;
 	}
 
+	function getTimes(){
+		return $this->times;
+	}
 }
 
 ?>

@@ -61,9 +61,13 @@ function eventListeners(){
 				if(perfectGame){
 					$('#success')[0].play();
 					chrono.pause();
+
+					//enregistrement du temps réalisé sur le chemin courant
+					var time_done = (parseInt(chrono.min) * 60 * 1000) + (parseInt(chrono.sec) * 1000) + parseInt(chrono.msec);
+					$.post("../ajax/addTimeInExperience.php", {id_path: chemins[currentPath].id, time: time_done});
+
 					resetVariables();
 					currentPath++;
-
 					// il reste encore des chemins a faire
 					if(currentPath < chemins.length){
 						path = new Path(ctx);

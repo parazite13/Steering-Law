@@ -104,6 +104,11 @@
 						Ajouter un chemin
 					</a>
 				</li>
+				<li class="nav-item">
+					<a href="#" data-content="times" class="nav-link" onclick="$('#canvasAdmin').css('display', 'none');">
+						Consulter les temps
+					</a>
+				</li>
 			</ul>
 			
 			<div id="details-content">
@@ -203,6 +208,65 @@
 							<button class="btn btn-primary" role="button" type="submit" name="add-experience" style="margin: auto">Ajouter l'expérience</button>
 						</div>
 					</form>
+				</section>
+
+				<section id="times" class="d-none">
+					<?php 
+						$allPath = $db->getExperiences()->find(array(), array('summary' => true))->toArray();
+					?>
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Temps (ms)</th>
+								<?php 
+									foreach($allPath as $path):
+										//remplit le tooltip
+										$htmlTooltip = "";
+										foreach ($path->primitives as $primitive){
+											$htmlTooltip .= "(" . $primitive['courbure']  .", " . $primitive['angle'] . ", " . round(1 / $primitive['courbure'] * $primitive['angle'] * pi() / 180) . ")";
+										}
+								?>
+									<th data-toggle="tooltip" data-placement="top" title="<?=$htmlTooltip ?>"><?=$path->id ?></th>
+								<?php endforeach ?>
+							</tr>
+						</thead>
+						<tbody>
+							
+								<?php 
+								$still_time = true;
+								$line = 0;
+								while($still_time){
+									$still_time = false;
+								?>
+									<tr>
+										<th scope="row"><?=$line + 1?></th>
+										<?php
+										//pour chaque chemin
+										foreach($allPath as $path):
+											if($db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true)) !== null){
+												$current_times = $db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true))->times;
+												$current_times_array = iterator_to_array($current_times);
+											}else{
+												$current_times_array  =array();
+											}
+											if($line < count($current_times_array)){
+												$still_time = true;?>	
+												<td><?=$current_times_array[$line]?></td>
+											<?php 	
+											}else{
+											?>
+												<td></td>
+											<?php 
+											}
+										endforeach;
+										?>
+									</tr>
+								<?php  
+								$line++;
+								}
+								?>
+						</tbody>
+					</table>
 				</section>
 			</div>
 		</div>
