@@ -212,7 +212,6 @@ function Timer(){
 		this.run();
 	}
 	this.run = function(){
-		console.log("toto");
 		this.end = new Date();
 		this.diff = this.end - this.dateStartChrono;
 		this.diff = new Date(this.diff);
