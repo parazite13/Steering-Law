@@ -52,7 +52,7 @@ function eventListeners(){
 			if(arrayStartEnd[0] == colorStart && arrayStartEnd[1] == colorWay){
 				perfectGame = true;
 				wayStarted = true;
-				chrono.run();
+				chrono.start();
 			}
 		}else{
 			if(codePixel == colorEnd){
@@ -200,14 +200,19 @@ function draw(){
 }
 
 function Timer(){
-	this.dateStartChrono = new Date();
+	this.dateStartChrono;
 	this.end;
 	this.diff;
 	this.min;
 	this.sec;
 	this.msec;
 	this.timerID;
+	this.start = function(){
+		this.dateStartChrono = new Date();
+		this.run();
+	}
 	this.run = function(){
+		console.log("toto");
 		this.end = new Date();
 		this.diff = this.end - this.dateStartChrono;
 		this.diff = new Date(this.diff);
