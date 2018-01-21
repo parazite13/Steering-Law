@@ -65,27 +65,25 @@
 				exit();
 			}
 
-			$allExperiences = $db->getExperiences()->find(array(), array('summary' => true))->toArray();
+			$allPath = $db->getExperiences()->find(array(), array('summary' => true))->toArray();
 
-
-			;
 
 			if(($order = $db->getOrder()->findOne(array(), array('summary' => true))) !== null){
-				$experiences = array();
+				$allPathWithOrder = array();
 
 				// on parcoure l'ordre
 				foreach($order->order as $id){
 
 					// on cherche le chemin avec l'id
-					foreach($allExperiences as $experience){
-						if($experience->id == $id){
-							$experiences[] = $experience;
+					foreach($allPath as $path){
+						if($path->id == $id){
+							$allPathWithOrder[] = $path;
 						}
 					}
 				}
 				
 			}else{
-				$experiences = $allExperiences;
+				$allPathWithOrder = $allPath;
 			}
 
 
@@ -127,24 +125,24 @@
 						</thead>
 						<tbody>
 
-							<?php foreach($experiences as $experience): ?>
+							<?php foreach($allPathWithOrder as $path): ?>
 								<tr>
-									<td><?= $experience->id ?></td>
-									<td><?= $experience->length ?></td>
-									<td><?= $experience->width ?></td>
+									<td><?= $path->id ?></td>
+									<td><?= $path->length ?></td>
+									<td><?= $path->width ?></td>
 									<td>
-										<?php foreach($experience->primitives as $primitive): ?>
+										<?php foreach($path->primitives as $primitive): ?>
 											(<?= $primitive['courbure'] ?>, <?= $primitive['angle'] ?>, <?= round(1 / $primitive['courbure'] * $primitive['angle'] * pi() / 180) ?>), <br>
 										<?php endforeach; ?>
 									</td>
 									<td>
-										<canvas id="visualisation-<?=$experience->id?>" class="visualisation" style="width: 100%;height: auto;"></canvas>
+										<canvas id="visualisation-<?=$path->id?>" class="visualisation" style="width: 100%;height: auto;"></canvas>
 									</td>
 									<td>
-										<?php if($experience->current) : ?>										
-											<input type="checkbox" name="current-<?=$experience->id?>" chemin="<?=$experience->id?>" checked>
+										<?php if($path->current) : ?>										
+											<input type="checkbox" name="current-<?=$path->id?>" chemin="<?=$path->id?>" checked>
 										<?php else: ?>
-											<input type="checkbox" name="current-<?=$experience->id?>" chemin="<?=$experience->id?>">
+											<input type="checkbox" name="current-<?=$path->id?>" chemin="<?=$path->id?>">
 										<?php endif; ?>
 									</td>
 								</tr>
@@ -211,15 +209,12 @@
 				</section>
 
 				<section id="times" class="d-none">
-					<?php 
-						$allPath = $db->getExperiences()->find(array(), array('summary' => true))->toArray();
-					?>
 					<table class="table table-striped">
 						<thead>
 							<tr>
 								<th>Temps (ms)</th>
 								<?php 
-									foreach($allPath as $path):
+									foreach($allPathWithOrder as $path):
 										//remplit le tooltip
 										$htmlTooltip = "";
 										foreach ($path->primitives as $primitive){
@@ -231,42 +226,39 @@
 							</tr>
 						</thead>
 						<tbody>
-							<?php if($db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true)) !== null): ?>
-							
-								<?php 
-								$still_time = true;
-								$line = 0;
-								while($still_time){
-									$still_time = false;
-								?>
-									<tr>
-										<th scope="row"><?=$line + 1?></th>
-										<?php
-										//pour chaque chemin
-										foreach($allPath as $path):
-											if($db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true)) !== null){
-												$current_times = $db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true))->times;
-												$current_times_array = iterator_to_array($current_times);
-											}else{
-												$current_times_array = array();
-											}
-											if($line < count($current_times_array)){
-												$still_time = true;?>	
-												<td><?=$current_times_array[$line]?></td>
-											<?php 	
-											}else{
-											?>
-												<td></td>
-											<?php 
-											}
-										endforeach;
+							<?php 
+							$still_time = true;
+							$line = 0;
+							while($still_time){
+								$still_time = false;
+							?>
+								<tr>
+									<th scope="row"><?=$line + 1?></th>
+									<?php
+									//pour chaque chemin
+									foreach($allPathWithOrder as $path):
+										if($db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true)) !== null){
+											$current_times = $db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true))->times;
+											$current_times_array = iterator_to_array($current_times);
+										}else{
+											$current_times_array = array();
+										}
+										if($line < count($current_times_array)){
+											$still_time = true;?>	
+											<td><?=$current_times_array[$line]?></td>
+										<?php 	
+										}else{
 										?>
-									</tr>
-								<?php  
-								$line++;
-								}
-								?>
-							<?php endif; ?>
+											<td></td>
+										<?php 
+										}
+									endforeach;
+									?>
+								</tr>
+							<?php  
+							$line++;
+							}
+							?>
 						</tbody>
 					</table>
 				</section>
@@ -334,6 +326,12 @@
 
 	$(document).ready(function(){
 
+		// Virage dégeulasse de la derniere ligne du tableau des temps
+		var lastTr = $("#times tbody tr:last");
+		if(lastTr.length > 0){
+			lastTr.remove();
+		}
+
 		// Déplacement des lignes du tableau
 		$("#all-experiences tbody").sortable({
 		    items: ">",
@@ -392,7 +390,7 @@
 		});
 
 		// Affiche les visualisations
-		<?php echo 'var json = ' . json_encode($experiences) . ';'; ?>
+		<?php echo 'var json = ' . json_encode($allPathWithOrder) . ';'; ?>
 		$.each(json, function(index, experience){
 			var ctx = $('#visualisation-' + experience.id)[0].getContext('2d');
 			var path = new Path(ctx);
