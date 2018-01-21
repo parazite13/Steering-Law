@@ -121,6 +121,7 @@
 								<th style="width: 200px;">Primitives<br><small>(courbure, angle, longueur)</small></th>
 								<th>Visualisation</th>
 								<th>Chemins utilisé</th>
+								<th>Copier le chemin</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -145,6 +146,7 @@
 											<input type="checkbox" name="current-<?=$path->id?>" chemin="<?=$path->id?>">
 										<?php endif; ?>
 									</td>
+									<td><button type="button" role="button" class="btn btn-info" onclick="copyPath(<?=$path->id?>)">Copier</button></td>
 								</tr>
 							<?php endforeach; ?>
 							
@@ -310,6 +312,8 @@
 	canvas[0].height = $("#canvasAdmin").height();
 	var ctx = canvas[0].getContext('2d');
 
+	<?php echo 'var json = ' . json_encode($allPathWithOrder) . ';'; ?>
+
 	var canvasVisualisation = $('.visualisation');
 	$.each(canvasVisualisation, function(index, visualisation){
 		visualisation.width = canvas.width();
@@ -361,36 +365,9 @@
 		});
 
 		// Ajout de primitive
-		$("#add-primitive").click(function(){
-			var primitive = $("#add-experience table tr").length - 1;
-			html = '\
-				<tr id="primitive-'+primitive+'">\
-					<td>'+primitive+'</td>\
-					<td>\
-						<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.00001">\
-					</td>\
-					<td>\
-						<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
-					</td>\
-					<td>\
-						<input class="form-control" type="number" disabled>\
-					</td>\
-					<td>\
-						<div class="form-check">\
-							<label class="form-check-label">\
-								<input class="form-check-input" type="checkbox" name="orientation-'+primitive+'" value="invert">\
-								Inverser\
-							</label>\
-						</div>\
-					</td>\
-				</tr>\
-			';
-			$(html).insertBefore("#add-primitive");
-			setVisualisation();
-		});
+		$("#add-primitive").click(addRowToPath);
 
 		// Affiche les visualisations
-		<?php echo 'var json = ' . json_encode($allPathWithOrder) . ';'; ?>
 		$.each(json, function(index, experience){
 			var ctx = $('#visualisation-' + experience.id)[0].getContext('2d');
 			var path = new Path(ctx);
@@ -409,7 +386,109 @@
 		//setVisualisation est appelée dès le début pour la 1ère prmitive affichée et à chaque fois qu'on en crée une
 		setVisualisation();
 
+		// Petit tricks pour envoyer les checkboxes non checked
+		$("#add-experience form").submit(
+			function() {
+
+			    // For each unchecked checkbox on the form...
+			    $(this).find($("input:checkbox:not(:checked)")).each(
+
+			        // Create a hidden field with the same name as the checkbox and a value of 0
+			        // You could just as easily use "off", "false", or whatever you want to get
+			        // when the checkbox is empty.
+			        function(index) {
+			            var input = $('<input />');
+			            input.attr('type', 'hidden');
+			            input.attr('name', $(this).attr("name")); // Same name as the checkbox
+			            input.attr('value', "normal");
+
+			            // append it to the form the checkbox is in just as it's being submitted
+			            var form = $(this)[0].form;
+			            $(form).append(input);
+
+			        }   // end function inside each()
+			    );      // end each() argument list
+
+			    return true;    // Don't abort the form submit
+
+			}   // end function inside submit()
+			);    
+
 	});
+
+	function copyPath(id){
+
+		// Enleve les anciens tr en trop
+		$("#add-experience tbody tr:not(:first):not(:last)").remove();
+
+		// Affiche le canvas
+		$('#canvasAdmin').css('display', 'block');
+
+		// Change d'onglet
+		$('#tabbed-menu a').removeClass('active');
+		$('a[data-content="add-experience"]').addClass('active');
+		$('#details-content > section').addClass('d-none');
+		$('#' + $('a[data-content="add-experience"]').attr('data-content')).removeClass('d-none');
+
+		$.each(json, function(i, experience){
+			if(experience.id == id){
+				
+				$("input#path-width").val(experience.width);
+
+				$.each(experience.primitives, function(j, primitive){
+					var tr = $("#primitive-" + (j + 1));
+					var inputs = tr.find("input, select, checkbox");
+					
+					inputs[0].value = primitive.courbure;
+					inputs[1].value = primitive.angle;
+
+					// cas particulier pour le premier
+					if(j == 0){
+						inputs[3].value = (primitive.orientation == "normal") ? "left" : "right";
+					}else{
+						inputs[3].checked = (primitive.orientation == "invert");
+					}
+
+
+					// s'il y a encore des primitives on ajoute des lignes
+					if(j + 1 < experience.primitives.length){
+						addRowToPath();
+					}
+
+				});
+			}
+		});
+
+		refreshPath();
+	}
+
+	function addRowToPath(){
+		var primitive = $("#add-experience table tr").length - 1;
+		html = '\
+			<tr id="primitive-'+primitive+'">\
+				<td>'+primitive+'</td>\
+				<td>\
+					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.00001">\
+				</td>\
+				<td>\
+					<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
+				</td>\
+				<td>\
+					<input class="form-control" type="number" disabled>\
+				</td>\
+				<td>\
+					<div class="form-check">\
+						<label class="form-check-label">\
+							<input class="form-check-input" type="checkbox" name="orientation-'+primitive+'" value="invert">\
+							Inverser\
+						</label>\
+					</div>\
+				</td>\
+			</tr>\
+		';
+		$(html).insertBefore("#add-primitive");
+		setVisualisation();
+	}
 
 	function setVisualisation(){
 		$('#primitives>tr:not(:last-child)').change(refreshPath);
@@ -434,7 +513,6 @@
 						orientation = inputs[3].checked;
 						orientation =  (orientation) ? "invert" : undefined;
 					}
-					console.log(orientation);
 					path.add(new Arc(radius, angle, colorWay), orientation);
 					ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
 
