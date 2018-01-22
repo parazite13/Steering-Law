@@ -108,7 +108,7 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href="#" data-content="graphique" class="nav-link" onclick="$('#canvasAdmin').css('display', 'none');">
+					<a href="#" data-content="graphique" class="nav-link" onclick="$('#canvasAdmin').css('display', 'none'); createGraph();">
 						Afficher le graphique
 					</a>
 				</li>
@@ -340,6 +340,37 @@
 
 	$(document).ready(function(){
 
+		Chart.pluginService.register({
+			beforeInit: function(chart, options) {
+
+	            var data = chart.config.data;
+				var indexRegression = 1;
+				var values = [1000, 0];
+
+				var dataRegression = [];
+				for(var index in data.datasets[0].data){
+					var x = data.datasets[0].data[index].x;
+					var y = data.datasets[0].data[index].y;
+
+					if(x < values[0]) values[0] = x;
+					if(x > values[1]) values[1] = x;
+
+					dataRegression.push([data.datasets[0].data[index].x, data.datasets[0].data[index].y]);
+				}
+
+	            var result = regression('linear', dataRegression);
+	            $('#regression-equation').html(result.string + " <br> R² = " + Math.round(result.r2 * 1000) / 1000);
+
+	            for(var index in values){
+
+	            	var x = values[index];
+	                var y = result.equation[0] * x + result.equation[1];
+
+	                data.datasets[indexRegression].data.push({x: x, y: y});
+	            }
+	        }
+		});
+
 		// Virage dégeulasse de la derniere ligne du tableau des temps
 		var lastTr = $("#times tbody tr:last");
 		if(lastTr.length > 0){
@@ -540,12 +571,49 @@
 		$('#path-length').val(Math.round(pathLength));
 	}
 
+	function createGraph(){
+
+		$.get('<?=ABSURL?>ajax/getGraphDataset.php', function(dataset){
+
+			var chart = new Chart($("#canvas-graphique"), {
+				type: 'line',
+			    data: {
+			      datasets: JSON.parse(dataset)
+			    },
+			    options: {
+			        title: {
+						display: true,
+						text: "Temps en fonction de l'indice de difficulté"
+			    	},
+			    	scales: {
+						xAxes: [{
+							type: 'linear',
+							position: 'bottom',
+							scaleLabel: {
+								display: true,
+								labelString: 'Indice de diffultée (Longueur / Largeur)'
+							}
+						}],
+						yAxes: [{
+							position: 'left',
+							scaleLabel: {
+								display: true,
+								labelString: 'Temps (ms)'
+							}
+						}]
+					},
+					steppedLine: 'false',
+
+			    },
+			});
+
+		});
+
+	}
+
 	</script>
 	<script type="text/javascript" src="../js/Arc.js"></script>
 	<script type="text/javascript" src="../js/Path.js"></script>
-
-	<script type="text/javascript" src="../js/graphique.js.php"></script>
-
 
 
 <?php endif; ?>
