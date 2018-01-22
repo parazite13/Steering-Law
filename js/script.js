@@ -6,7 +6,7 @@ var ctx = canvas[0].getContext('2d');
 
 // chemins
 var chemins;
-var currentPath = 0;
+var currentPath;
 
 //variables de jeu
 var mouseX;
@@ -18,6 +18,7 @@ var perfectGame = true;
 var chrono = new Timer();
 var isTraining;
 var path;
+var endExperience = false;
 
 //couleurs
 var colorStart = '#00ff00';
@@ -76,6 +77,10 @@ function eventListeners(){
 						});
 						path.setWidth(chemins[currentPath].width);
 						draw();
+					}else{
+						ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+						endExperience = true;
+						alert("Expérience terminée, merci d'avoir participé !");
 					}
 
 				}else{
@@ -92,6 +97,7 @@ function resetVariables(){
 	backPixels = [];
 	wayStarted = false;
 	perfectGame = true;
+	endExperience = false;
 	chrono.reset();
 }
 
@@ -164,8 +170,10 @@ function drawBack(){
 }
 
 function start(){
+
 	resetVariables();
 	eventListeners();
+	currentPath = 0;
 	//canvas[0].webkitRequestFullscreen();
 	$('#chronotime').css('visibility', 'visible');
 
@@ -187,16 +195,21 @@ function start(){
 
 
 function draw(){
+
 	ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
-	//dessins
-	drawBack();
-	path.draw();
-	if(wayStarted){
-		setPixels(mouseX, mouseY);
+
+	if(!endExperience){
+
+		//dessins
+		drawBack();
+		path.draw();
+		if(wayStarted){
+			setPixels(mouseX, mouseY);
+		}
+		
+		drawBackPixels();
+		window.requestAnimationFrame(draw); //on appelle draw en boucle
 	}
-	
-	drawBackPixels();
-	window.requestAnimationFrame(draw); //on appelle draw en boucle
 }
 
 function Timer(){

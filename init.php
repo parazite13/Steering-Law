@@ -14,9 +14,212 @@ require(ABSPATH . 'include/classLoader.php');
 // Création de l'objet de connexion à la base de données
 $db = new MongoDb(DB_NAME);
 
+// ZONE DE RESET //
+/*
+$db->getTimes()->drop();
+$db->getExperiences()->drop();
+$db->getOrder()->drop();
+
+$chemins = array(
+
+	array(
+		'id' => 1,
+		'primitives' => array(
+			array(
+				'courbure' => 0.00002,
+				'angle' => 0.4,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00002,
+				'angle' => 0.4,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00002,
+				'angle' => 0.4,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 80,
+		'current' => true
+	),
+
+	array(
+		'id' => 2,
+		'primitives' => array(
+			array(
+				'courbure' => 0.00002,
+				'angle' => 0.4,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00002,
+				'angle' => 0.4,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00002,
+				'angle' => 0.4,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 50,
+		'current' => true
+	),	
+
+	array(
+		'id' => 3,
+		'primitives' => array(
+			array(
+				'courbure' => 0.00002,
+				'angle' => 0.4,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00002,
+				'angle' => 0.4,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00002,
+				'angle' => 0.4,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 30,
+		'current' => true
+	),
+
+	array(
+		'id' => 4,
+		'primitives' => array(
+			array(
+				'courbure' => 0.000025,
+				'angle' => 0.1,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00155,
+				'angle' => 20,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00149,
+				'angle' => 40,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00155,
+				'angle' => 20,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00003,
+				'angle' => 0.1,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 80,
+		'current' => true
+	),
+
+	array(
+		'id' => 5,
+		'primitives' => array(
+			array(
+				'courbure' => 0.000025,
+				'angle' => 0.1,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00155,
+				'angle' => 20,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00149,
+				'angle' => 40,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00155,
+				'angle' => 20,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00003,
+				'angle' => 0.1,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 50,
+		'current' => true
+	),
+
+	array(
+		'id' => 6,
+		'primitives' => array(
+			array(
+				'courbure' => 0.000025,
+				'angle' => 0.1,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00155,
+				'angle' => 20,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00149,
+				'angle' => 40,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00155,
+				'angle' => 20,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00003,
+				'angle' => 0.1,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 30,
+		'current' => true
+	),
+
+);
+
+foreach($chemins as $chemin){
+	$db->getExperiences()->insertOne($chemin);
+}
+
+$order = array(
+	'order' => array(
+		1, 2, 3, 4, 5, 6
+	)
+);
+
+$db->getOrder()->insertOne($order);
+
+die();
+*/
+// FIN ZONE DE RESET //
+
+// $db->getTimes()->drop();
+// $db->getExperiences()->drop();
+// $db->getOrder()->drop();
 // $db->getExperiences()->deleteMany(array("id" => 2));
 // echo "<pre>";
-// print_r($db->getExperiences()->find(array(), array('summary' => true))->toArray());
+// print_r($db->getExperiences()->find(array("id" => 4), array('summary' => true))->toArray());
 // die();
 
 // Initialise les variables de session
