@@ -7,7 +7,7 @@
 </head>
 
 <body>
-	
+
 	<?php getHeader(); ?>
 	
 	<audio id="buzzer" src="audio/buzzer.mp3" type="audio/mp3"></audio>

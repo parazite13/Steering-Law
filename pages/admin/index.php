@@ -94,7 +94,7 @@
 			<ul id="tabbed-menu" class="nav nav-tabs">
 				<li class="nav-item">
 					<a href="#" data-content="all-experiences" class="nav-link active" onclick="$('#canvasAdmin').css('display', 'none');">
-						Chemins
+						Visualiser les Chemins
 					</a>
 				</li>
 				<li class="nav-item">
@@ -105,6 +105,11 @@
 				<li class="nav-item">
 					<a href="#" data-content="times" class="nav-link" onclick="$('#canvasAdmin').css('display', 'none');">
 						Consulter les temps
+					</a>
+				</li>
+				<li class="nav-item">
+					<a href="#" data-content="graphique" class="nav-link" onclick="$('#canvasAdmin').css('display', 'none');">
+						Afficher le graphique
 					</a>
 				</li>
 			</ul>
@@ -263,6 +268,11 @@
 							?>
 						</tbody>
 					</table>
+				</section>
+
+				<section id="graphique" class="d-none">
+					<canvas id="canvas-graphique"></canvas>
+					<p id="regression-equation" class="text-center"></p>
 				</section>
 			</div>
 		</div>
@@ -471,7 +481,7 @@
 					<input class="form-control" type="number" name="courbure-'+primitive+'" min="0" max="1" step="0.00001">\
 				</td>\
 				<td>\
-					<input class="form-control" type="number" name="angle-'+primitive+'" min="1" max="360" step="1">\
+					<input class="form-control" type="number" name="angle-'+primitive+'" min="0.1" max="360" step="0.1">\
 				</td>\
 				<td>\
 					<input class="form-control" type="number" disabled>\
@@ -533,6 +543,9 @@
 	</script>
 	<script type="text/javascript" src="../js/Arc.js"></script>
 	<script type="text/javascript" src="../js/Path.js"></script>
+
+	<script type="text/javascript" src="../js/graphique.js.php"></script>
+
 
 
 <?php endif; ?>
