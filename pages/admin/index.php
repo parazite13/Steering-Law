@@ -230,7 +230,7 @@
 											$htmlTooltip .= "(" . $primitive['courbure']  .", " . $primitive['angle'] . ", " . round(1 / $primitive['courbure'] * $primitive['angle'] * pi() / 180) . ") <br>";
 										}
 								?>
-									<th class="text-center" data-toggle="tooltip" data-placement="bottom" title="<?=$htmlTooltip ?>"><?=$path->id ?></th>
+									<th class="text-center" data-toggle="tooltip" data-placement="bottom" title="<?=$htmlTooltip ?>">Chemin <?=$path->id ?></th>
 									<?php 
 									endforeach 
 									?>
