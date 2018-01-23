@@ -220,16 +220,20 @@
 						<thead>
 							<tr>
 								<th>Temps (ms)</th>
-								<?php 
+									<?php 
 									foreach($allPathWithOrder as $path):
 										//remplit le tooltip
 										$htmlTooltip = "";
+										$htmlTooltip .= "Longueur : " . $path->length . "<br>";
+										$htmlTooltip .= "Largeur : " . $path->width . "<br>";
 										foreach ($path->primitives as $primitive){
-											$htmlTooltip .= "(" . $primitive['courbure']  .", " . $primitive['angle'] . ", " . round(1 / $primitive['courbure'] * $primitive['angle'] * pi() / 180) . ")";
+											$htmlTooltip .= "(" . $primitive['courbure']  .", " . $primitive['angle'] . ", " . round(1 / $primitive['courbure'] * $primitive['angle'] * pi() / 180) . ") <br>";
 										}
 								?>
-									<th data-toggle="tooltip" data-placement="top" title="<?=$htmlTooltip ?>"><?=$path->id ?></th>
-								<?php endforeach ?>
+									<th class="text-center" data-toggle="tooltip" data-placement="bottom" title="<?=$htmlTooltip ?>"><?=$path->id ?></th>
+									<?php 
+									endforeach 
+									?>
 							</tr>
 						</thead>
 						<tbody>
@@ -252,7 +256,7 @@
 										}
 										if($line < count($current_times_array)){
 											$still_time = true;?>	
-											<td><?=$current_times_array[$line]?></td>
+											<td class="text-center"><?=$current_times_array[$line]?></td>
 										<?php 	
 										}else{
 										?>
@@ -339,6 +343,9 @@
 	var colorBackPixelsBad = '#ff0000';
 
 	$(document).ready(function(){
+
+		//tooltip 
+		$('[data-toggle="tooltip"]').tooltip({html: true}); 
 
 		// Virage dégeulasse de la derniere ligne du tableau des temps
 		var lastTr = $("#times tbody tr:last");
