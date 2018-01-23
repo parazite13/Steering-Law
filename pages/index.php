@@ -15,6 +15,7 @@
 
 	<div class="jumbotron text-center py-2" id="experience">
 		<div class="container-fluid">
+			<h1 class="jumbotron-heading">Loi de Steering</h1>
 			<div id="headExperience">
 				<p>
 					Quand vous êtes prêt, passez sur la zone verte et suivez le chemin pour lancer l'expérience puis effectuez le chemin tracé le plus rapidement et le plus précisément possible.<br>
