@@ -105,25 +105,21 @@ function Path(ctx){
 			// Et aussi en fonction de la config
 			switch(config){
 				case 1:
-					console.log("A1");
 					arc.end = Math.PI + angle;
 					arc.start = arc.end - arc.angle;
 					arc.isTrigonometrique = false;
 					break;
 				case 2:
-					console.log("A2");
 					arc.end = angle;
 					arc.start = arc.end - arc.angle;
 					arc.isTrigonometrique = false;
 					break;
 				case 3:
-					console.log("A3");
 					arc.end = angle;
 					arc.start = arc.end - arc.angle;
 					arc.isTrigonometrique = false;
 					break;
 				case 4:
-					console.log("A4");
 					arc.end = Math.PI + angle;
 					arc.start = arc.end - arc.angle;
 					arc.isTrigonometrique = false;
@@ -132,25 +128,21 @@ function Path(ctx){
 		}else{
 			switch(config){
 				case 1:
-					console.log("B1");
 					arc.end = Math.PI + angle;
 					arc.start = arc.end + arc.angle;
 					arc.isTrigonometrique = true;
 					break;
 				case 2:
-					console.log("B2");
 					arc.end = angle;
 					arc.start = arc.end + arc.angle;
 					arc.isTrigonometrique = true;
 					break;
 				case 3:
-					console.log("B3");
 					arc.end = angle;
 					arc.start = arc.end + arc.angle;
 					arc.isTrigonometrique = true;
 					break;
 				case 4:
-					console.log("B4");
 					arc.end = Math.PI + angle;
 					arc.start = arc.end + arc.angle;
 					arc.isTrigonometrique = true;
