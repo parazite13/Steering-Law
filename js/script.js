@@ -50,7 +50,7 @@ function eventListeners(){
 				arrayStartEnd.shift();
 			}
 			//Ca part.
-			if(arrayStartEnd[0] == colorStart && arrayStartEnd[1] == colorWay){
+			if(colorPseudoEquals(arrayStartEnd[0], colorStart) && colorPseudoEquals(arrayStartEnd[1], colorWay)){
 				perfectGame = true;
 				wayStarted = true;
 				chrono.start();
@@ -226,6 +226,30 @@ function draw(){
 		drawBackPixels();
 		window.requestAnimationFrame(draw); //on appelle draw en boucle
 	}
+}
+
+function colorPseudoEquals(color1, color2, delta = 10){
+
+	if(color1 === undefined || color2 === undefined) return false;
+
+	color1 = color1.substr(1);
+	color2 = color2.substr(1);
+
+	var r1 = parseInt("0x" + color1.substr(0, 2), 16);
+	var g1 = parseInt("0x" + color1.substr(2, 2), 16);
+	var b1 = parseInt("0x" + color1.substr(4, 2), 16);
+
+	var r2 = parseInt("0x" + color2.substr(0, 2), 16);
+	var g2 = parseInt("0x" + color2.substr(2, 2), 16);
+	var b2 = parseInt("0x" + color2.substr(4, 2), 16);
+
+	ret =
+		Math.abs(r1 - r2) < delta &&
+		Math.abs(g1 - g2) < delta &&
+		Math.abs(b1 - b2) < delta;
+
+		return ret;
+
 }
 
 function Timer(){
