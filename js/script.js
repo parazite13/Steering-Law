@@ -65,6 +65,9 @@ function eventListeners(){
 					$('#success')[0].play();
 					chrono.pause();
 
+					colorWay = "#7e7e7e";
+					path.setColor(colorWay);
+
 					//enregistrement du temps réalisé sur le chemin courant
 					var time_done = (parseInt(chrono.min) * 60 * 1000) + (parseInt(chrono.sec) * 1000) + parseInt(chrono.msec);
 					$.post("../ajax/addTimeInExperience.php", {id_path: chemins[currentPath].id, time: time_done});
@@ -87,7 +90,9 @@ function eventListeners(){
 					}else{
 						ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
 						endExperience = true;
-						alert("Expérience terminée, merci d'avoir participé !");
+						setTimeout(function(){
+							alert("Expérience terminée, merci d'avoir participé !");
+						}, 200);
 					}
 
 				}else{
