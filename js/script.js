@@ -301,4 +301,15 @@ function PathTrain(ctx){
 			arc.draw();
 		});
 	}
+
+	//fonction qui change la couleur de tous les arcs du chemin (sauf départ et arrivée)
+	this.setColor = function(color){
+		var lastIndex = this.arcs.length - 1;
+		$.each(this.arcs, function(index, arc){
+			if(index != 0 && index != lastIndex){
+				arc.color = color;
+			}
+		});
+	}
+	
 }
