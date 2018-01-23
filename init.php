@@ -16,7 +16,7 @@ $db = new MongoDb(DB_NAME);
 
 // ZONE DE RESET //
 /*
-$db->getTimes()->drop();
+//$db->getTimes()->drop();
 $db->getExperiences()->drop();
 $db->getOrder()->drop();
 
@@ -192,9 +192,66 @@ $chemins = array(
 			)
 		),
 		'length' => 1047,
-		'width' => 30,
+		'width' => 80,
 		'current' => true
 	),
+
+	array(
+		'id' => 7,
+		'primitives' => array(
+			array(
+				'courbure' => 0.003701,
+				'angle' => 36.9,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.006,
+				'angle' => 300,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 80,
+		'current' => true
+	),
+
+	array(
+		'id' => 8,
+		'primitives' => array(
+			array(
+				'courbure' => 0.003701,
+				'angle' => 36.9,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.006,
+				'angle' => 300,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 50,
+		'current' => true
+	),
+
+	array(
+		'id' => 9,
+		'primitives' => array(
+			array(
+				'courbure' => 0.003701,
+				'angle' => 36.9,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.006,
+				'angle' => 300,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 30,
+		'current' => true
+	)
 
 );
 
@@ -204,7 +261,7 @@ foreach($chemins as $chemin){
 
 $order = array(
 	'order' => array(
-		1, 2, 3, 4, 5, 6
+		1, 2, 3, 4, 5, 6, 7, 8, 9
 	)
 );
 
