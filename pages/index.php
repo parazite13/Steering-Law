@@ -28,7 +28,9 @@
 			<canvas id="canvas" style="width: 100%; height:90vh; cursor: crosshair; background: #FFFFFF;">
 				Je suis un Canvas et je me porte mal.
 			</canvas>
-			<input class="form-control mx-auto" type="text" id="coordMouse" value="" style="text-align: center; width: initial;"/>
+			<div class="progress">
+				<div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+			</div>
 		</div>
 	</div>
 

@@ -71,6 +71,11 @@ function eventListeners(){
 
 					resetVariables();
 					currentPath++;
+
+					var progress = $("#progress-bar");
+					progress.css("width", (currentPath * 100 / chemins.length) + "%");
+					progress.html(Math.round(currentPath * 100 / chemins.length) + "%");
+
 					// il reste encore des chemins a faire
 					if(currentPath < chemins.length){
 						path = new Path(ctx);
@@ -90,7 +95,6 @@ function eventListeners(){
 				}
 			}
 		}
-		$('#coordMouse').val("x : " + mouseX + "; " + " y : " + mouseY);
 	});
 }
 
