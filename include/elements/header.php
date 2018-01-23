@@ -4,7 +4,7 @@
 			<?php if(getCurrentUrl() == ABSURL): ?>
 				<a href="<?=ABSURL?>admin/">
 					<button type="submit" value="true" class="btn btn-secondary" role="button">
-						Éspace Admin
+						Espace Admin
 					</button>
 				</a>
 			<?php endif; ?>
