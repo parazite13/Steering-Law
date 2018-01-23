@@ -39,6 +39,14 @@
 
 </body>
 
+<script type="text/javascript">
+	
+$("#canvas").click(function(event){
+	event.preventDefault();
+	event.stopPropagation();
+});
+
+</script>
 <script type="text/javascript" src="js/Arc.js"></script>
 <script type="text/javascript" src="js/Path.js"></script>
 <script type="text/javascript" src="js/script.js"></script>
