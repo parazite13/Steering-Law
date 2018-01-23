@@ -27,7 +27,7 @@ Installation
 ------------
 
 * Créer un vhost Apache pointant vers la racine du projet
-	* Editer le fichier `apache2.x.yy/conf/extra/httpd-vhosts/conf`
+	* Editer le fichier `apache2.x.yy/conf/extra/httpd-vhosts.conf`
 	* Ajouter le bloc suivant à la fin en remplacant SERVER_NAME par un nom de domaine (ex: steering, www.steering-law, www.steering_law.com ...) et PROJECT_FOLDER par le chemin vers le dossier contenant le projet
 	```
 	<VirtualHost *:80>
@@ -40,7 +40,7 @@ Installation
 		</Directory>
 	</VirtualHost>
 	```
-	* Editer le fichier `etc/host` et y ajouter en remplcant SERVER_NAME par le même nom utilisé précedemment
+	* Editer le fichier `etc/host` et y ajouter en remplacant SERVER_NAME par le même nom utilisé précedemment
 	```
 	127.0.0.1	SERVER_NAME
 	::1	SERVER_NAME
