@@ -23,10 +23,10 @@ var endExperience = false;
 //couleurs
 var colorStart = '#00ff00';
 var colorEnd = '#ff0000';
-var colorWay = '#e8e8e8';
+var colorWay = '#7e7e7e';
 var colorBackground = '#ffffff';
 var colorBackPixelsGood = '#00ff00';
-var colorBackPixelsBad = '#ff0000';
+var colorBackPixelsBad = '#fe0000';
 
 function eventListeners(){
 	canvas.mousemove(function(event){
@@ -54,6 +54,8 @@ function eventListeners(){
 				perfectGame = true;
 				wayStarted = true;
 				chrono.start();
+				colorWay = '#e8e8e8';
+				path.setColor(colorWay);
 			}
 		}else{
 			if(codePixel == colorEnd){
@@ -124,9 +126,14 @@ function setPixels(x, y){
 			//buzz qu'une seule fois
 			if(perfectGame){
 				$('#buzzer')[0].play();
+				colorWay = '#7e7e7e';
+				path.setColor(colorWay);
+				setTimeout(function(){
+					resetVariables();
+				}, 1000);
 			}
 			perfectGame = false;
-			newPix.color = '#ff0000';
+			newPix.color = colorBackPixelsBad;
 		}
 	}
 }
