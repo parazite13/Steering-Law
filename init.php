@@ -16,7 +16,7 @@ $db = new MongoDb(DB_NAME);
 
 // ZONE DE RESET //
 /*
-//$db->getTimes()->drop();
+$db->getTimes()->drop();
 $db->getExperiences()->drop();
 $db->getOrder()->drop();
 
@@ -98,33 +98,23 @@ $chemins = array(
 		'id' => 4,
 		'primitives' => array(
 			array(
-				'courbure' => 0.000025,
-				'angle' => 0.1,
+				'courbure' => 0.00002,
+				'angle' => 0.4,
 				'orientation' => 'normal'
 			),
 			array(
-				'courbure' => 0.00155,
-				'angle' => 20,
+				'courbure' => 0.00002,
+				'angle' => 0.4,
 				'orientation' => 'normal'
 			),
 			array(
-				'courbure' => 0.00149,
-				'angle' => 40,
-				'orientation' => 'normal'
-			),
-			array(
-				'courbure' => 0.00155,
-				'angle' => 20,
-				'orientation' => 'normal'
-			),
-			array(
-				'courbure' => 0.00003,
-				'angle' => 0.1,
+				'courbure' => 0.00002,
+				'angle' => 0.4,
 				'orientation' => 'normal'
 			)
 		),
 		'length' => 1047,
-		'width' => 80,
+		'width' => 20,
 		'current' => true
 	),
 
@@ -158,7 +148,7 @@ $chemins = array(
 			)
 		),
 		'length' => 1047,
-		'width' => 50,
+		'width' => 80,
 		'current' => true
 	),
 
@@ -192,7 +182,7 @@ $chemins = array(
 			)
 		),
 		'length' => 1047,
-		'width' => 80,
+		'width' => 50,
 		'current' => true
 	),
 
@@ -200,18 +190,33 @@ $chemins = array(
 		'id' => 7,
 		'primitives' => array(
 			array(
-				'courbure' => 0.003701,
-				'angle' => 36.9,
+				'courbure' => 0.000025,
+				'angle' => 0.1,
 				'orientation' => 'normal'
 			),
 			array(
-				'courbure' => 0.006,
-				'angle' => 300,
+				'courbure' => 0.00155,
+				'angle' => 20,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00149,
+				'angle' => 40,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00155,
+				'angle' => 20,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00003,
+				'angle' => 0.1,
 				'orientation' => 'normal'
 			)
 		),
 		'length' => 1047,
-		'width' => 80,
+		'width' => 30,
 		'current' => true
 	),
 
@@ -219,18 +224,33 @@ $chemins = array(
 		'id' => 8,
 		'primitives' => array(
 			array(
-				'courbure' => 0.003701,
-				'angle' => 36.9,
+				'courbure' => 0.000025,
+				'angle' => 0.1,
 				'orientation' => 'normal'
 			),
 			array(
-				'courbure' => 0.006,
-				'angle' => 300,
+				'courbure' => 0.00155,
+				'angle' => 20,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00149,
+				'angle' => 40,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00155,
+				'angle' => 20,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.00003,
+				'angle' => 0.1,
 				'orientation' => 'normal'
 			)
 		),
 		'length' => 1047,
-		'width' => 50,
+		'width' => 20,
 		'current' => true
 	),
 
@@ -249,7 +269,64 @@ $chemins = array(
 			)
 		),
 		'length' => 1047,
+		'width' => 80,
+		'current' => true
+	),
+
+	array(
+		'id' => 10,
+		'primitives' => array(
+			array(
+				'courbure' => 0.003701,
+				'angle' => 36.9,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.006,
+				'angle' => 300,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 50,
+		'current' => true
+	),
+
+	array(
+		'id' => 11,
+		'primitives' => array(
+			array(
+				'courbure' => 0.003701,
+				'angle' => 36.9,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.006,
+				'angle' => 300,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
 		'width' => 30,
+		'current' => true
+	),
+
+	array(
+		'id' => 12,
+		'primitives' => array(
+			array(
+				'courbure' => 0.003701,
+				'angle' => 36.9,
+				'orientation' => 'normal'
+			),
+			array(
+				'courbure' => 0.006,
+				'angle' => 300,
+				'orientation' => 'normal'
+			)
+		),
+		'length' => 1047,
+		'width' => 20,
 		'current' => true
 	)
 
@@ -261,7 +338,7 @@ foreach($chemins as $chemin){
 
 $order = array(
 	'order' => array(
-		1, 2, 3, 4, 5, 6, 7, 8, 9
+		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
 	)
 );
 
