@@ -28,19 +28,19 @@ Installation
 
 * Créer un vhost Apache pointant vers la racine du projet
 	* Editer le fichier `apache2.x.yy/conf/extra/httpd-vhosts/conf`
-	* Ajouter ceci à la fin en remplacant SERVER_NAME par un nom de domaine (ex: steering, www.steering-law, www.steering_law.com ...) et PROJECT_FOLDER par le chemin vers le dossier contenant le projet
-	`<VirtualHost *:80>
-		ServerName SERVER_NAME
-		DocumentRoot "PROJECT_FOLDER"
-		<Directory  "PROJECT_FOLDER">
-			Options +Indexes +Includes +FollowSymLinks +MultiViews
-			AllowOverride All
-			Require local
-		</Directory>
-	</VirtualHost>`
-	* Editer le fichier `etc/host` et y ajouter en remplcant SERVER_NAME par le même nom utilisé précedemment
-	`127.0.0.1	SERVER_NAME
-	::1	SERVER_NAME`
+	* Ajouter le bloc suivant à la fin en remplacant SERVER_NAME par un nom de domaine (ex: steering, www.steering-law, www.steering_law.com ...) et PROJECT_FOLDER par le chemin vers le dossier contenant le projet
+`<VirtualHost *:80>
+	ServerName SERVER_NAME
+	DocumentRoot "PROJECT_FOLDER"
+	<Directory  "PROJECT_FOLDER">
+		Options +Indexes +Includes +FollowSymLinks +MultiViews
+		AllowOverride All
+		Require local
+	</Directory>
+</VirtualHost>`
+	* Editer le fichier `etc/host` et y ajouter en remplacant SERVER_NAME par le même nom utilisé précedemment
+`127.0.0.1	SERVER_NAME
+::1	SERVER_NAME`
 * Configurer le projet en editant le fichier `include/config.php`, il faut renseigner pour la constante ABSURL la valeur précédemment utilisé pour SERVER_NAME en lui préfixant 'http://' et en lui suffixant un slash terminal (ex: http://steering/, http://www.steering-law/, http://www.steering_law.com/ ...).
 
 Une fois l'installation terminée, vous pouvez accèder à l'application via l'URL précédemment renseignée depuis votre navigateur web favoris en vérifiant que le serveur web et la base de données sont et bien éxecuté.
