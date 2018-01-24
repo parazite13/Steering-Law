@@ -28,7 +28,7 @@ Installation
 
 * Créer un vhost Apache pointant vers la racine du projet
 	* Editer le fichier `apache2.x.yy/conf/extra/httpd-vhosts.conf`
-	* Ajouter le bloc suivant à la fin en remplacant SERVER_NAME par un nom de domaine (ex: steering, www.steering-law, www.steering_law.com ...) et PROJECT_FOLDER par le chemin vers le dossier contenant le projet
+	* Ajouter le bloc suivant à la fin en remplacant SERVER_NAME par un nom de domaine (ex: steering, www.steering-law, www.steering_law.com ...) et PROJECT_FOLDER par le chemin vers le dossier contenant le projet (sans le slash terminal).
 	```
 	<VirtualHost *:80>
 		ServerName SERVER_NAME
@@ -63,6 +63,6 @@ Pour se connecter en tant qu'administrateur, il faut cliquer sur le bouton en ha
 
 Une fois administrateur, il est possible :
 * De visualiser l'ensemble des chemins préalablement créé, d'en modifier l'order et en définissant son utilisation dans l'expérience courante ou non
-* De créer une nouvelle expérience en utilisant une ou plusieurs pritives de base
-* De visualiser les temps obtenu par les participants pour chacun des chemins qu'ils ont réalisé durant l'expérience
-* D'afficher le graphique du temps en fonction de l'indice de difficultée pour chacun des chemins courant
+* De créer une nouvelle expérience en utilisant une ou plusieurs primitives de base
+* De visualiser les temps obtenus par les participants pour chacun des chemins qu'ils ont réalisés durant l'expérience
+* D'afficher le graphique du temps en fonction de l'indice de difficultée pour chacun des chemins courants
