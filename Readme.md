@@ -17,8 +17,8 @@ Pré-Requis
 ----------
 
 * Apache 2
-* MongoDB v3.4 ou supérieur
-* PHP v7.0 ou supérieur avec le driver mongodb.so
+* MongoDB v2.4 ou supérieur
+* PHP v5.4 ou supérieur avec le driver mongodb.so
 
 L'ensemble de ces pré-requis peuvent être installé via [AMPPS](http://www.ampps.com/download)
 
@@ -33,10 +33,10 @@ Installation
 	<VirtualHost *:80>
 		ServerName SERVER_NAME
 		DocumentRoot "PROJECT_FOLDER"
-		<Directory  "PROJECT_FOLDER">
+		<Directory  "PROJECT_FOLDER/">
 			Options +Indexes +Includes +FollowSymLinks +MultiViews
 			AllowOverride All
-			Require local
+			Allow from all
 		</Directory>
 	</VirtualHost>
 	```
@@ -47,7 +47,7 @@ Installation
 	```
 * Configurer le projet en editant le fichier `include/config.php`, il faut renseigner pour la constante ABSURL la valeur précédemment utilisé pour SERVER_NAME en lui préfixant 'http://' et en lui suffixant un slash terminal (ex: http://steering/, http://www.steering-law/, http://www.steering_law.com/ ...).
 
-Une fois l'installation terminée, vous pouvez accèder à l'application via l'URL précédemment renseignée depuis votre navigateur web favoris en vérifiant que le serveur web et la base de données sont et bien éxecuté.
+Une fois l'installation terminée, vous pouvez accèder à l'application via l'URL précédemment renseignée depuis votre navigateur web favoris en vérifiant que le serveur web et la base de données sont bien éxecutés.
 
 Usage
 ------

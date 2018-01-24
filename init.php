@@ -12,7 +12,7 @@ require(ABSPATH . 'vendor/autoload.php');
 require(ABSPATH . 'include/classLoader.php');
 
 // Création de l'objet de connexion à la base de données
-$db = new MongoDb(DB_NAME);
+$db = new Steering\MongoDb(DB_NAME);
 
 // ZONE DE RESET //
 /*
