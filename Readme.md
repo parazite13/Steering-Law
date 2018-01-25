@@ -40,7 +40,7 @@ Installation
 		</Directory>
 	</VirtualHost>
 	```
-	* Editer le fichier `etc/host` et y ajouter en remplacant SERVER_NAME par le même nom utilisé précedemment
+	* Editer le fichier `etc/hosts` et y ajouter la redirection DNS suivante en remplacant SERVER_NAME par le même nom utilisé précedemment
 	```
 	127.0.0.1	SERVER_NAME
 	::1	SERVER_NAME
