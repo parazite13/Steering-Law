@@ -25,7 +25,7 @@ foreach($dbTimes as $i => $dbTime){
 	$averageTime = $averageTime / ($j + 1);
 
 	$data[] = array(
-		'x' => $indD,
+		'x' => $indD * log(2),
 		'y' => $averageTime
 	);
 
