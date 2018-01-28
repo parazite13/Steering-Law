@@ -347,10 +347,27 @@
 		//tooltip 
 		$('[data-toggle="tooltip"]').tooltip({html: true}); 
 
-		// Virage dégeulasse de la derniere ligne du tableau des temps
-		var lastTr = $("#times tbody tr:last");
-		if(lastTr.length > 0){
-			lastTr.remove();
+		// Derniere ligne du tableau des temps affiche la moyenne
+		var lastTr = $("#times tbody tr:last-child");
+		lastTr.addClass("table-active");
+		lastTr.find("th").html("Moyenne");
+		var length = $("#times thead tr:first").children().length;
+		for(var i = 2; i <= length; i++){
+
+			var sum = 0;
+			var trueValueCount = 0;
+			var tds = $("#times tbody tr:not(:last-child) td:nth-child("+i+")");
+
+			$.each(tds, function(j, td){
+				var val = parseInt(td.innerHTML);
+				if(!isNaN(val)){
+					trueValueCount++;
+					sum += val;
+				}
+			});
+			
+			sum /= trueValueCount;
+			$("#times tbody tr:last-child td:nth-child("+i+")").addClass("text-center").html(Math.round(sum));
 		}
 
 		// Déplacement des lignes du tableau
