@@ -584,7 +584,7 @@
 							position: 'bottom',
 							scaleLabel: {
 								display: true,
-								labelString: 'Indice de diffultée (Longueur / Largeur)'
+								labelString: 'Indice de diffultée (Longueur / (Largeur * ln(2)))'
 							}
 						}],
 						yAxes: [{
