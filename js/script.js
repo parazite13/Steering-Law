@@ -19,10 +19,12 @@ var chrono = new Timer();
 var isTraining;
 var path;
 var endExperience = false;
+var isReturningInPath = false;
+var results = [];
 
 //couleurs
 var colorStart = '#00ff00';
-var colorEnd = '#ff0000';
+var colorEnd = '#fefefe';
 var colorWay = '#7e7e7e';
 var colorBackground = '#ffffff';
 var colorBackPixelsGood = '#00ff00';
@@ -69,35 +71,45 @@ function eventListeners(){
 					path.setColor(colorWay);
 
 					//enregistrement du temps réalisé sur le chemin courant
-					var time_done = (parseInt(chrono.min) * 60 * 1000) + (parseInt(chrono.sec) * 1000) + parseInt(chrono.msec);
-					$.post("../ajax/addTimeInExperience.php", {id_path: chemins[currentPath].id, time: time_done});
+					if(!isTraining){
 
-					resetVariables();
-					currentPath++;
+						var time_done = (parseInt(chrono.min) * 60 * 1000) + (parseInt(chrono.sec) * 1000) + parseInt(chrono.msec);
+						results.push({id_path: chemins[currentPath].id, time: time_done});
 
-					var progress = $("#progress-bar");
-					progress.css("width", (currentPath * 100 / chemins.length) + "%");
-					progress.html(Math.round(currentPath * 100 / chemins.length) + "%");
+						resetVariables();
+						currentPath++;
 
-					// il reste encore des chemins a faire
-					if(currentPath < chemins.length){
-						path = new Path(ctx);
-						$.each(chemins[currentPath].primitives, function(key, primitive){
-							path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay), primitive.orientation);
-						});
-						path.setWidth(chemins[currentPath].width);
-						draw();
-					}else{
-						ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
-						endExperience = true;
-						setTimeout(function(){
-							alert("Expérience terminée, merci d'avoir participé !");
-						}, 200);
+						var progress = $("#progress-bar");
+						progress.css("width", (currentPath * 100 / chemins.length) + "%");
+						progress.html(Math.round(currentPath * 100 / chemins.length) + "%");
+
+						// il reste encore des chemins a faire
+						if(currentPath < chemins.length){
+							path = new Path(ctx);
+							$.each(chemins[currentPath].primitives, function(key, primitive){
+								path.add(new Arc(1 / (primitive.courbure), primitive.angle * Math.PI / 180, colorWay), primitive.orientation);
+							});
+							path.setWidth(chemins[currentPath].width);
+							draw();
+						}else{
+							$.each(results, function(index, value){
+								$.post("../ajax/addTimeInExperience.php", value);
+							});
+							ctx.clearRect(0, 0, canvas[0].width, canvas[0].height);
+							endExperience = true;
+							setTimeout(function(){
+								alert("Expérience terminée, merci d'avoir participé !");
+							}, 200);
+						}
 					}
 
 				}else{
 					chrono.reset();
 				}
+			}else if(isTraining && codePixel == colorWay){
+				isReturningInPath = true;
+				colorWay = "#e8e8e8";
+				path.setColor(colorWay);
 			}
 		}
 	});
@@ -133,16 +145,25 @@ function setPixels(x, y){
 		//souris sur fond blanc -> hors chemin
 		if(codePixelCurrent == colorBackground){
 			//buzz qu'une seule fois
-			if(perfectGame){
+			
+			if(perfectGame && !isTraining){
 				$('#buzzer')[0].play();
-				colorWay = '#7e7e7e';
-				path.setColor(colorWay);
 				setTimeout(function(){
 					resetVariables();
 				}, 1000);
+				perfectGame = false;
 			}
-			perfectGame = false;
+			
+			colorWay = '#7e7e7e';
+			path.setColor(colorWay);
+
+			if(isTraining && isReturningInPath){
+				$('#buzzer')[0].play();
+				isReturningInPath = false;
+			}
+
 			newPix.color = colorBackPixelsBad;
+
 		}
 	}
 }
@@ -313,10 +334,10 @@ function PathTrain(ctx){
 	arcStart.isTrigonometrique = true;
 	this.arcs = [arcStart];
 
-	//crée l'arc vert de départ (constante pour tous les chemins)
+	//crée l'arc principal
 	var mainArc = new Arc(arcStart.radius, undefined, colorWay, ctx);
 	mainArc.center = arcStart.center;
-	mainArc.start = Math.PI - Math.PI / 25;
+	mainArc.start = Math.PI - Math.PI / 50;
 	mainArc.end = arcStart.start;	
 	mainArc.isTrigonometrique = true;
 	this.arcs.push(mainArc);
@@ -324,7 +345,7 @@ function PathTrain(ctx){
 	// //initialise un arc de fin (qui changera à chaque ajout d'arc dans le chemin)
 	var arcEnd = new Arc(mainArc.radius, undefined, colorEnd, ctx);
 	arcEnd.center = mainArc.center;
-	arcEnd.start = Math.PI - Math.PI / 50;
+	arcEnd.start = Math.PI;
 	arcEnd.end = mainArc.start;
 	arcEnd.isTrigonometrique = true;
 	this.arcs.push(arcEnd);

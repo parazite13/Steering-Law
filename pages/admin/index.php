@@ -103,8 +103,8 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href="#" data-content="times" class="nav-link" onclick="$('#canvasAdmin').css('display', 'none');">
-						Consulter les temps
+					<a href="#" data-content="times" class="nav-link" onclick="$('#canvasAdmin').css('display', 'none'); createTimesTable();">
+						Consulter les temps (ms)
 					</a>
 				</li>
 				<li class="nav-item">
@@ -120,25 +120,24 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>Id</th>
+								<th>#</th>
 								<th>Longueur</th>
 								<th>Largeur</th>
-								<th style="width: 200px;">Primitives<br><small>(courbure, angle, longueur)</small></th>
+								<th style="width: 250px;">Primitives<br><small>(courbure, angle, longueur)</small></th>
 								<th>Visualisation</th>
 								<th>Chemins utilisé</th>
-								<th>Copier le chemin</th>
 							</tr>
 						</thead>
 						<tbody>
 
 							<?php foreach($allPathWithOrder as $path): ?>
-								<tr>
+								<tr id-path="<?=$path->id?>">
 									<td><?= $path->id ?></td>
 									<td><?= $path->length ?></td>
 									<td><?= $path->width ?></td>
 									<td>
 										<?php foreach($path->primitives as $primitive): ?>
-											(<?= $primitive['courbure'] ?>, <?= $primitive['angle'] ?>, <?= round(1 / $primitive['courbure'] * $primitive['angle'] * pi() / 180) ?>), <br>
+											(<?= $primitive['courbure'] ?>, <?= $primitive['angle'] ?>, <?= round(1 / $primitive['courbure'] * $primitive['angle'] * pi() / 180) ?>, <?= $primitive['orientation'] ?>), <br>
 										<?php endforeach; ?>
 									</td>
 									<td>
@@ -151,7 +150,10 @@
 											<input type="checkbox" name="current-<?=$path->id?>" chemin="<?=$path->id?>">
 										<?php endif; ?>
 									</td>
-									<td><button type="button" role="button" class="btn btn-info" onclick="copyPath(<?=$path->id?>)">Copier</button></td>
+									<td class="btn-toolbar">
+										<button type="button" role="button" class="btn btn-info mr-2" onclick="copyPath(<?=$path->id?>)">Copier</button>
+										<button type="button" role="button" class="btn btn-danger" onclick="deletePath(<?=$path->id?>)"><i class="fa fa-trash"></i></button>
+									</td>
 								</tr>
 							<?php endforeach; ?>
 							
@@ -166,8 +168,8 @@
 						<table class="table table-hover">
 							<thead>
 								<tr>
-									<th>Primitives</th>
-									<th>Courbure</th>
+									<th>Ordre</th>
+									<th>Courbure (1 / rayon)</th>
 									<th>Angle</th>
 									<th>Longueur</th>
 									<th>Orientation</th>
@@ -210,68 +212,13 @@
 							</div>
 						</div>
 						<div class="row mt-2">
-							<button class="btn btn-primary" role="button" type="submit" name="add-experience" style="margin: auto">Ajouter l'expérience</button>
+							<button class="btn btn-primary" role="button" type="submit" name="add-experience" style="margin: auto">Ajouter à la liste</button>
 						</div>
 					</form>
 				</section>
 
 				<section id="times" class="d-none">
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th>Temps (ms)</th>
-									<?php 
-									foreach($allPathWithOrder as $path):
-										//remplit le tooltip
-										$htmlTooltip = "";
-										$htmlTooltip .= "Longueur : " . $path->length . "<br>";
-										$htmlTooltip .= "Largeur : " . $path->width . "<br>";
-										foreach ($path->primitives as $primitive){
-											$htmlTooltip .= "(" . $primitive['courbure']  .", " . $primitive['angle'] . ", " . round(1 / $primitive['courbure'] * $primitive['angle'] * pi() / 180) . ") <br>";
-										}
-								?>
-									<th class="text-center" data-toggle="tooltip" data-placement="bottom" title="<?=$htmlTooltip ?>">Chemin <?=$path->id ?></th>
-									<?php 
-									endforeach 
-									?>
-							</tr>
-						</thead>
-						<tbody>
-							<?php 
-							$still_time = true;
-							$line = 0;
-							while($still_time){
-								$still_time = false;
-							?>
-								<tr>
-									<th scope="row"><?=$line + 1?></th>
-									<?php
-									//pour chaque chemin
-									foreach($allPathWithOrder as $path):
-										if($db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true)) !== null){
-											$current_times = $db->getTimes()->findOne(array("id_path" => $path->id), array('summary' => true))->times;
-											$current_times_array = iterator_to_array($current_times);
-										}else{
-											$current_times_array = array();
-										}
-										if($line < count($current_times_array)){
-											$still_time = true;?>	
-											<td class="text-center"><?=$current_times_array[$line]?></td>
-										<?php 	
-										}else{
-										?>
-											<td></td>
-										<?php 
-										}
-									endforeach;
-									?>
-								</tr>
-							<?php  
-							$line++;
-							}
-							?>
-						</tbody>
-					</table>
+					
 				</section>
 
 				<section id="graphique" class="d-none">
@@ -336,16 +283,13 @@
 
 	//couleurs
 	var colorStart = '#00ff00';
-	var colorEnd = '#ff0000';
+	var colorEnd = '#fefefe';
 	var colorWay = '#e8e8e8';
 	var colorBackground = '#ffffff';
 	var colorBackPixelsGood = '#00ff00';
 	var colorBackPixelsBad = '#ff0000';
 
 	$(document).ready(function(){
-
-		//tooltip 
-		$('[data-toggle="tooltip"]').tooltip({html: true}); 
 
 		// Derniere ligne du tableau des temps affiche la moyenne
 		var lastTr = $("#times tbody tr:last-child");
@@ -449,6 +393,15 @@
 			);    
 
 	});
+
+	function deletePath(id){
+
+		$.post("<?=ABSURL?>ajax/deletePath.php", {id: id}, function(result){
+			var tr = $('tr[id-path="'+id+'"]');
+			tr.fadeOut();
+		});
+
+	}
 
 	function copyPath(id){
 
@@ -562,6 +515,17 @@
 
 		// Ecrit la longueur du chemin
 		$('#path-length').val(Math.round(pathLength));
+	}
+
+	function createTimesTable(){
+
+		$.get('<?=ABSURL?>ajax/getTimesTable.php', function(result){
+			$("#times").html(result);
+
+			//tooltip 
+			$('[data-toggle="tooltip"]').tooltip({html: true}); 
+		});
+
 	}
 
 	function createGraph(){

@@ -19,8 +19,14 @@ function Path(ctx){
 	this.arcs.push(arcEnd);
 
 	this.draw = function(){
+		var length = this.arcs.length;
 		$.each(this.arcs, function(index, arc){
-			arc.draw();
+			if(index == length - 1){
+				arc.draw();
+			}else{
+				arc.drawBorder();
+				arc.draw();
+			}
 		});
 	}
 

@@ -9,15 +9,16 @@ function Arc(radius, angle, color, ctx){
 	this.isTrigonometrique;
 	this.color = color;
 	this.draw = function(){
-		this.ctx.strokeStyle = "#000000";
-		this.ctx.beginPath();
-		this.ctx.lineWidth = this.width;
-		this.ctx.arc(this.center.x, this.center.y, this.radius, this.start, this.end, this.isTrigonometrique);
-		this.ctx.stroke();
-		
 		this.ctx.strokeStyle = this.color;
 		this.ctx.beginPath();
 		this.ctx.lineWidth = this.width - 4;
+		this.ctx.arc(this.center.x, this.center.y, this.radius, this.start, this.end, this.isTrigonometrique);
+		this.ctx.stroke();
+	}
+	this.drawBorder = function(){
+		this.ctx.strokeStyle = "#000000";
+		this.ctx.beginPath();
+		this.ctx.lineWidth = this.width;
 		this.ctx.arc(this.center.x, this.center.y, this.radius, this.start, this.end, this.isTrigonometrique);
 		this.ctx.stroke();
 	}
