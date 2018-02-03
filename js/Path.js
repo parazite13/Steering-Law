@@ -2,6 +2,8 @@ function Path(ctx){
 
 	this.ctx = ctx;
 
+	this.orientations = [];
+
 	//crée l'arc vert de départ (constante pour tous les chemins)
 	var arcStart = new Arc(1000, undefined, colorStart, this.ctx);
 	arcStart.center = {x:50, y:canvas[0].height / 2 + arcStart.radius};
@@ -30,10 +32,13 @@ function Path(ctx){
 		});
 	}
 
-	// orientation : undefined, invert
+	// orientation : undefined, left, right
 	this.add = function(arc, orientation){
 
 		arc.ctx = this.ctx;
+
+		//ajoute l'orientation au tableau des orientations de toutes les primitives
+		this.orientations.push(orientation);
 
 		//retire le dernier élément (arc de fin de chemin)
 		this.arcs.splice(this.arcs.length - 1, 1);
@@ -93,13 +98,15 @@ function Path(ctx){
 
 		if(orientation !== undefined){
 
-			if(orientation == "invert"){
+			if(this.arcs.length - 2 >= 0 && orientation == this.orientations[this.arcs.length - 2] ||
+				this.arcs.length - 2 < 0 && orientation == "right"){
 
 				xNewCenter = lastCurrentArc.getStart().x + (lastCurrentArc.getStart().x - xNewCenter);
 				yNewCenter = lastCurrentArc.getStart().y + (lastCurrentArc.getStart().y - yNewCenter);
 
 				config = ((config + 1) % 4) + 1;
 				previousIsTrigo = !previousIsTrigo;
+
 			}
 		}
 		

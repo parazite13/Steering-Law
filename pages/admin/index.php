@@ -464,12 +464,17 @@
 					<input class="form-control" type="number" disabled>\
 				</td>\
 				<td>\
-					<div class="form-check">\
-						<label class="form-check-label">\
-							<input class="form-check-input" type="checkbox" name="orientation-'+primitive+'" value="invert">\
-							Inverser\
-						</label>\
-					</div>\
+					<select class="form-control" name="orientation-'+primitive+'">';
+
+		if($("#add-experience table tr:nth-child("+(primitive-1)+") select").val() == "left"){
+			html += '	<option value="left">Gauche</option>\
+					 	<option value="right" selected>Droite</option>';
+		}else{
+			html += '	<option value="left" selected>Gauche</option>\
+					 	<option value="right">Droite</option>';
+		}
+
+		html += '	</select>\
 				</td>\
 			</tr>\
 		';
@@ -492,14 +497,7 @@
 				if(inputs[0].value != "" && inputs[1].value != ""){
 					var radius = 1 / inputs[0].value;
 					var angle = Math.PI * inputs[1].value / 180;
-					var orientation;
-					if(index == 0){
-						orientation = $(this).find("select").val();
-						orientation = (orientation == "right") ? orientation = "invert" : undefined
-					}else{
-						orientation = inputs[3].checked;
-						orientation =  (orientation) ? "invert" : undefined;
-					}
+					var orientation = $(this).find("select").val();
 					path.add(new Arc(radius, angle, colorWay), orientation);
 					ctx.clearRect(0, 0, canvas[0].width, canvas[0].height); 
 

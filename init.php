@@ -28,17 +28,17 @@ $chemins = array(
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			)
 		),
 		'length' => 1047,
@@ -52,17 +52,17 @@ $chemins = array(
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			)
 		),
 		'length' => 1047,
@@ -76,17 +76,17 @@ $chemins = array(
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			)
 		),
 		'length' => 1047,
@@ -100,17 +100,17 @@ $chemins = array(
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00002,
 				'angle' => 0.4,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			)
 		),
 		'length' => 1047,
@@ -124,27 +124,27 @@ $chemins = array(
 			array(
 				'courbure' => 0.000025,
 				'angle' => 0.1,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00155,
 				'angle' => 20,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00149,
 				'angle' => 40,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00155,
 				'angle' => 20,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00003,
 				'angle' => 0.1,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			)
 		),
 		'length' => 1047,
@@ -158,27 +158,27 @@ $chemins = array(
 			array(
 				'courbure' => 0.000025,
 				'angle' => 0.1,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00155,
 				'angle' => 20,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00149,
 				'angle' => 40,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00155,
 				'angle' => 20,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00003,
 				'angle' => 0.1,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			)
 		),
 		'length' => 1047,
@@ -192,27 +192,27 @@ $chemins = array(
 			array(
 				'courbure' => 0.000025,
 				'angle' => 0.1,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00155,
 				'angle' => 20,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00149,
 				'angle' => 40,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00155,
 				'angle' => 20,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00003,
 				'angle' => 0.1,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			)
 		),
 		'length' => 1047,
@@ -226,27 +226,27 @@ $chemins = array(
 			array(
 				'courbure' => 0.000025,
 				'angle' => 0.1,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00155,
 				'angle' => 20,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00149,
 				'angle' => 40,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.00155,
 				'angle' => 20,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			),
 			array(
 				'courbure' => 0.00003,
 				'angle' => 0.1,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			)
 		),
 		'length' => 1047,
@@ -260,12 +260,12 @@ $chemins = array(
 			array(
 				'courbure' => 0.003701,
 				'angle' => 36.9,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.006,
 				'angle' => 300,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			)
 		),
 		'length' => 1047,
@@ -279,12 +279,12 @@ $chemins = array(
 			array(
 				'courbure' => 0.003701,
 				'angle' => 36.9,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.006,
 				'angle' => 300,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			)
 		),
 		'length' => 1047,
@@ -298,12 +298,12 @@ $chemins = array(
 			array(
 				'courbure' => 0.003701,
 				'angle' => 36.9,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.006,
 				'angle' => 300,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			)
 		),
 		'length' => 1047,
@@ -317,12 +317,12 @@ $chemins = array(
 			array(
 				'courbure' => 0.003701,
 				'angle' => 36.9,
-				'orientation' => 'normal'
+				'orientation' => 'left'
 			),
 			array(
 				'courbure' => 0.006,
 				'angle' => 300,
-				'orientation' => 'normal'
+				'orientation' => 'right'
 			)
 		),
 		'length' => 1047,
